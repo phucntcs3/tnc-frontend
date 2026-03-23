@@ -17,7 +17,7 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from '@ant-design/icons'
-import type { User } from '../data'
+import type { User, UserAccount } from '../data'
 import { useUsers, useCreateUser, useUpdateUser, useDeleteUser } from '../hooks/useUsers'
 import { useRoles } from '../../roles/hooks/useRoles'
 
@@ -130,6 +130,18 @@ function UserPage() {
         <Tag color={val ? 'default' : 'green'}>
           {val ? 'Chưa' : 'Đã đăng nhập'}
         </Tag>
+      ),
+    },
+    {
+      title: 'Accounts',
+      dataIndex: 'accounts',
+      key: 'accounts',
+      render: (accounts: UserAccount[]) => (
+        <Space size={4} wrap>
+          {accounts.map((a) => (
+            <Tag key={a.id}>{a.name}</Tag>
+          ))}
+        </Space>
       ),
     },
     { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt' },
@@ -252,6 +264,16 @@ function UserPage() {
                 <Tag color={viewingUser.isFirstLogin ? 'default' : 'green'}>
                   {viewingUser.isFirstLogin ? 'Chưa' : 'Đã đăng nhập'}
                 </Tag>
+              </div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Accounts</span>
+              <div>
+                <Space size={4} wrap>
+                  {viewingUser.accounts.map((a) => (
+                    <Tag key={a.id}>{a.name}</Tag>
+                  ))}
+                </Space>
               </div>
             </div>
             <div>

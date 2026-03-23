@@ -1,14 +1,22 @@
 import axiosClient from '@/api/axiosClient'
 import { ENDPOINTS } from '@/api/endpoints'
 
+export interface UserAccountResponse {
+  id: number
+  name: string
+  description: string | null
+  note: string | null
+  is_active: number
+}
+
 export interface UserResponse {
   id: number
   email: string
   is_active: number
   is_first_login: number
   role_id: number
-  account_id: number | null
   created_at: string
+  accounts: UserAccountResponse[]
 }
 
 export const getUsers = (params?: Record<string, unknown>) => {

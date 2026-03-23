@@ -9,8 +9,14 @@ const mapUser = (u: UserResponse): User => ({
   isActive: u.is_active === 1,
   isFirstLogin: u.is_first_login === 1,
   roleId: u.role_id,
-  accountId: u.account_id,
   createdAt: u.created_at.split('T')[0],
+  accounts: u.accounts.map((a) => ({
+    id: a.id,
+    name: a.name,
+    description: a.description,
+    note: a.note,
+    isActive: a.is_active === 1,
+  })),
 })
 
 export const useUsers = (params?: Record<string, unknown>) => {

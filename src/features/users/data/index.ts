@@ -1,3 +1,11 @@
+export interface UserAccount {
+  id: number
+  name: string
+  description: string | null
+  note: string | null
+  isActive: boolean
+}
+
 export interface User {
   key: string
   id: number
@@ -5,6 +13,6 @@ export interface User {
   isActive: boolean
   isFirstLogin: boolean
   roleId: number
-  accountId: number | null
   createdAt: string
+  accounts: UserAccount[]
 }
