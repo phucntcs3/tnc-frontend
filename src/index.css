@@ -23,6 +23,11 @@
   color: #1677ff !important;
 }
 
+/* Sider collapse trigger */
+.ant-layout-sider-trigger {
+  background: rgba(0, 0, 0, 0.15) !important;
+}
+
 .ant-modal {
   top: 0px;
 }

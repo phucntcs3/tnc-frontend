@@ -1,11 +1,6 @@
 import { Button, Table, Tag, Space } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-
-const data = [
-  { key: '1', name: 'Công ty ABC', contact: 'Nguyễn Văn A', phone: '0901234567', status: 'active' },
-  { key: '2', name: 'Công ty XYZ', contact: 'Trần Thị B', phone: '0912345678', status: 'active' },
-  { key: '3', name: 'Cá nhân Lê C', contact: 'Lê Văn C', phone: '0923456789', status: 'inactive' },
-]
+import { mockClients } from '../data/clients'
 
 const columns = [
   { title: 'Tên khách hàng', dataIndex: 'name', key: 'name' },
@@ -42,7 +37,7 @@ function ClientPage() {
           Thêm khách hàng
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} bordered />
+      <Table columns={columns} dataSource={mockClients} bordered />
     </div>
   )
 }

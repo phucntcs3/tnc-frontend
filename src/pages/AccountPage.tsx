@@ -1,11 +1,6 @@
 import { Button, Table, Tag, Space } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-
-const data = [
-  { key: '1', username: 'admin01', fullName: 'Nguyễn Văn A', role: 'admin', status: 'active' },
-  { key: '2', username: 'user01', fullName: 'Trần Thị B', role: 'user', status: 'active' },
-  { key: '3', username: 'user02', fullName: 'Lê Văn C', role: 'user', status: 'locked' },
-]
+import { mockAccounts } from '../data/accounts'
 
 const columns = [
   { title: 'Username', dataIndex: 'username', key: 'username' },
@@ -49,7 +44,7 @@ function AccountPage() {
           Thêm account
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} bordered />
+      <Table columns={columns} dataSource={mockAccounts} bordered />
     </div>
   )
 }

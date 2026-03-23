@@ -1,62 +1,10 @@
-import { Card, Col, Row, Statistic, Table, Tag } from 'antd'
+import { Pie } from '@ant-design/charts'
 import {
   DollarOutlined,
-  RiseOutlined,
-  UserAddOutlined,
-  ReloadOutlined,
-  StopOutlined,
+  RiseOutlined
 } from '@ant-design/icons'
-import { Pie } from '@ant-design/charts'
-
-const recentOrders = [
-  {
-    key: '1',
-    orderId: 'ĐH-001',
-    customer: 'Nguyễn Văn A',
-    total: 1500000,
-    status: 'completed',
-    date: '2026-03-23',
-  },
-  {
-    key: '2',
-    orderId: 'ĐH-002',
-    customer: 'Trần Thị B',
-    total: 2300000,
-    status: 'pending',
-    date: '2026-03-22',
-  },
-  {
-    key: '3',
-    orderId: 'ĐH-003',
-    customer: 'Lê Văn C',
-    total: 800000,
-    status: 'processing',
-    date: '2026-03-22',
-  },
-  {
-    key: '4',
-    orderId: 'ĐH-004',
-    customer: 'Phạm Thị D',
-    total: 4200000,
-    status: 'completed',
-    date: '2026-03-21',
-  },
-  {
-    key: '5',
-    orderId: 'ĐH-005',
-    customer: 'Hoàng Văn E',
-    total: 950000,
-    status: 'cancelled',
-    date: '2026-03-21',
-  },
-]
-
-const statusMap: Record<string, { color: string; label: string }> = {
-  completed: { color: 'green', label: 'Hoàn thành' },
-  pending: { color: 'orange', label: 'Chờ xử lý' },
-  processing: { color: 'blue', label: 'Đang xử lý' },
-  cancelled: { color: 'red', label: 'Đã huỷ' },
-}
+import { Card, Col, Row, Statistic, Table, Tag } from 'antd'
+import { recentOrders, dashboardStatusMap, clientStats } from '../data/dashboard'
 
 const columns = [
   { title: 'Mã đơn', dataIndex: 'orderId', key: 'orderId' },
@@ -72,7 +20,7 @@ const columns = [
     dataIndex: 'status',
     key: 'status',
     render: (status: string) => {
-      const s = statusMap[status]
+      const s = dashboardStatusMap[status]
       return <Tag color={s.color}>{s.label}</Tag>
     },
   },
@@ -95,7 +43,7 @@ function DashboardPage() {
               prefix={<DollarOutlined />}
               suffix="₫"
               formatter={(value) => Number(value).toLocaleString('vi-VN')}
-              valueStyle={{ color: '#fff' }}
+              valueStyle={{ color: '#fff', fontWeight: 'bold' }}
             />
             <div className="mt-2 text-sm" style={{ color: 'rgba(255,255,255,0.85)' }}>
               <RiseOutlined /> +12.5% so với tháng trước
@@ -111,7 +59,7 @@ function DashboardPage() {
               prefix={<DollarOutlined />}
               suffix="₫"
               formatter={(value) => Number(value).toLocaleString('vi-VN')}
-              valueStyle={{ color: '#fff' }}
+              valueStyle={{ color: '#fff', fontWeight: 'bold' }}
             />
             <div className="mt-2 text-sm" style={{ color: 'rgba(255,255,255,0.85)' }}>
               <RiseOutlined /> +8.3% so với tháng trước
@@ -125,11 +73,7 @@ function DashboardPage() {
         <Col xs={24} sm={12}>
           <Card title="Thống kê khách hàng">
             <Pie
-              data={[
-                { type: 'Khách mới', value: 48 },
-                { type: 'Khách cũ quay lại', value: 152 },
-                { type: 'Khách không hoạt động', value: 23 },
-              ]}
+              data={clientStats}
               angleField="value"
               colorField="type"
               innerRadius={0.6}
