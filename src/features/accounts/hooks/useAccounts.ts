@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getAccounts, createAccount, updateAccount, deleteAccount, type AccountResponse } from '../api/accountApi'
+import { getAccounts, createAccount, updateAccount, deleteAccount, type AccountResponse, type AccountPayload } from '../api/accountApi'
 import type { Account } from '../data'
 
 const mapAccount = (a: AccountResponse): Account => ({
@@ -8,10 +8,15 @@ const mapAccount = (a: AccountResponse): Account => ({
   name: a.name,
   description: a.description,
   note: a.note,
-  userId: a.user_id,
   isActive: a.is_active === 1,
   createdAt: a.created_at.split('T')[0],
   updatedAt: a.updated_at.split('T')[0],
+  users: a.users.map((u) => ({
+    id: u.id,
+    email: u.email,
+    isActive: u.is_active === 1,
+    roleId: u.role_id,
+  })),
 })
 
 export const useAccounts = (params?: Record<string, unknown>) => {
@@ -32,7 +37,7 @@ export const useCreateAccount = () => {
 export const useUpdateAccount = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<{ name: string; description: string; note: string }> }) =>
+    mutationFn: ({ id, data }: { id: number; data: Partial<AccountPayload> }) =>
       updateAccount(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['accounts'] }),
   })

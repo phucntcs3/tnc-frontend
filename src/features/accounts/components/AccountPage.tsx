@@ -16,7 +16,7 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from '@ant-design/icons'
-import type { Account } from '../data'
+import type { Account, AccountUser } from '../data'
 import { useAccounts, useCreateAccount, useUpdateAccount, useDeleteAccount } from '../hooks/useAccounts'
 
 interface AccountFormValues {
@@ -95,7 +95,18 @@ function AccountPage() {
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
     { title: 'Tên', dataIndex: 'name', key: 'name' },
-
+    {
+      title: 'Users',
+      dataIndex: 'users',
+      key: 'users',
+      render: (users: AccountUser[]) => (
+        <Space size={4} wrap>
+          {users.map((u) => (
+            <Tag key={u.id} className="m-0">{u.email}</Tag>
+          ))}
+        </Space>
+      ),
+    },
     {
       title: 'Trạng thái',
       dataIndex: 'isActive',
@@ -202,12 +213,12 @@ function AccountPage() {
               <div className="font-medium">{viewingAccount.name}</div>
             </div>
             <div>
-              <span className="text-gray-500 text-sm">Mô tả</span>
-              <div className="font-medium">{viewingAccount.description ?? ''}</div>
-            </div>
-            <div>
-              <span className="text-gray-500 text-sm">Ghi chú</span>
-              <div className="font-medium">{viewingAccount.note ?? ''}</div>
+              <span className="text-gray-500 text-sm">Users</span>
+              <div>
+                {viewingAccount.users.map((u) => (
+                  <Tag key={u.id}>{u.email}</Tag>
+                ))}
+              </div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Trạng thái</span>
@@ -216,6 +227,14 @@ function AccountPage() {
                   {viewingAccount.isActive ? 'Hoạt động' : 'Không hoạt động'}
                 </Tag>
               </div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Mô tả</span>
+              <div className="font-medium">{viewingAccount.description ?? ''}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Ghi chú</span>
+              <div className="font-medium">{viewingAccount.note ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Ngày tạo</span>
