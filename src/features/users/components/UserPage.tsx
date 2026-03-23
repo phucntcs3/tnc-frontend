@@ -17,12 +17,16 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from '@ant-design/icons'
-import {
-  type User,
-  roleOptions,
-  roleColorMap,
-} from '../data'
+import type { User } from '../data'
 import { useUsers, useCreateUser, useUpdateUser, useDeleteUser } from '../hooks/useUsers'
+import { useRoles } from '../../roles/hooks/useRoles'
+
+const roleColorMap: Record<number, string> = {
+  1: 'red',
+  2: 'blue',
+  3: 'green',
+  4: 'orange',
+}
 
 interface UserFormValues {
   email: string
@@ -31,6 +35,7 @@ interface UserFormValues {
 
 function UserPage() {
   const { data = [], isLoading } = useUsers()
+  const { data: roles = [] } = useRoles()
   const createUser = useCreateUser()
   const updateUserMutation = useUpdateUser()
   const deleteUserMutation = useDeleteUser()
@@ -100,11 +105,12 @@ function UserPage() {
     { title: 'Email', dataIndex: 'email', key: 'email' },
     {
       title: 'Vai trò',
-      dataIndex: 'roleName',
-      key: 'roleName',
-      render: (role: string) => (
-        <Tag color={roleColorMap[role] || 'default'}>{role}</Tag>
-      ),
+      dataIndex: 'roleId',
+      key: 'roleId',
+      render: (roleId: number) => {
+        const role = roles.find((r) => r.id === roleId)
+        return <Tag color={roleColorMap[roleId] || 'default'}>{role?.name ?? roleId}</Tag>
+      },
     },
     {
       title: 'Trạng thái',
@@ -198,7 +204,10 @@ function UserPage() {
             label="Vai trò"
             rules={[{ required: true, message: 'Chọn vai trò' }]}
           >
-            <Select options={roleOptions} placeholder="Chọn vai trò" />
+            <Select
+              options={roles.map((r) => ({ value: r.id, label: r.name }))}
+              placeholder="Chọn vai trò"
+            />
           </Form.Item>
         </Form>
       </Modal>
@@ -224,8 +233,8 @@ function UserPage() {
             <div>
               <span className="text-gray-500 text-sm">Vai trò</span>
               <div>
-                <Tag color={roleColorMap[viewingUser.roleName] || 'default'}>
-                  {viewingUser.roleName}
+                <Tag color={roleColorMap[viewingUser.roleId] || 'default'}>
+                  {roles.find((r) => r.id === viewingUser.roleId)?.name ?? viewingUser.roleId}
                 </Tag>
               </div>
             </div>

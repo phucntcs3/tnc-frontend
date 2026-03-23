@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getUsers, createUser, updateUser, deleteUser, type UserResponse } from '../api/userApi'
 import type { User } from '../data'
-import { roleOptions } from '../data'
 
 const mapUser = (u: UserResponse): User => ({
   key: String(u.id),
@@ -10,7 +9,6 @@ const mapUser = (u: UserResponse): User => ({
   isActive: u.is_active === 1,
   isFirstLogin: u.is_first_login === 1,
   roleId: u.role_id,
-  roleName: roleOptions.find((r) => r.value === u.role_id)?.label ?? '',
   accountId: u.account_id,
   createdAt: u.created_at.split('T')[0],
 })
