@@ -1,50 +1,229 @@
-import { Button, Table, Tag, Space } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { mockAccounts } from '../data'
+import { useState } from 'react'
+import {
+  Button,
+  Table,
+  Tag,
+  Space,
+  Modal,
+  Form,
+  Input,
+  Popconfirm,
+  message,
+} from 'antd'
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+} from '@ant-design/icons'
+import type { Account } from '../data'
+import { useAccounts, useCreateAccount, useUpdateAccount, useDeleteAccount } from '../hooks/useAccounts'
 
-const columns = [
-  { title: 'Username', dataIndex: 'username', key: 'username' },
-  { title: 'Họ tên', dataIndex: 'fullName', key: 'fullName' },
-  {
-    title: 'Vai trò',
-    dataIndex: 'role',
-    key: 'role',
-    render: (role: string) => (
-      <Tag color={role === 'admin' ? 'blue' : 'default'}>{role.toUpperCase()}</Tag>
-    ),
-  },
-  {
-    title: 'Trạng thái',
-    dataIndex: 'status',
-    key: 'status',
-    render: (status: string) => (
-      <Tag color={status === 'active' ? 'green' : 'red'}>
-        {status === 'active' ? 'Hoạt động' : 'Đã khoá'}
-      </Tag>
-    ),
-  },
-  {
-    title: 'Hành động',
-    key: 'action',
-    render: () => (
-      <Space>
-        <Button type="link" icon={<EditOutlined />} />
-        <Button type="link" danger icon={<DeleteOutlined />} />
-      </Space>
-    ),
-  },
-]
+interface AccountFormValues {
+  name: string
+  description?: string
+  note?: string
+}
 
 function AccountPage() {
+  const { data = [], isLoading } = useAccounts()
+  const createAccount = useCreateAccount()
+  const updateAccountMutation = useUpdateAccount()
+  const deleteAccountMutation = useDeleteAccount()
+
+  const [modalOpen, setModalOpen] = useState(false)
+  const [detailOpen, setDetailOpen] = useState(false)
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null)
+  const [viewingAccount, setViewingAccount] = useState<Account | null>(null)
+  const [form] = Form.useForm<AccountFormValues>()
+
+  const openCreate = () => {
+    setEditingAccount(null)
+    form.resetFields()
+    setModalOpen(true)
+  }
+
+  const openEdit = (record: Account) => {
+    setEditingAccount(record)
+    form.setFieldsValue({
+      name: record.name,
+      description: record.description ?? undefined,
+      note: record.note ?? undefined,
+    })
+    setModalOpen(true)
+  }
+
+  const openDetail = (record: Account) => {
+    setViewingAccount(record)
+    setDetailOpen(true)
+  }
+
+  const handleDelete = (record: Account) => {
+    deleteAccountMutation.mutate(record.id, {
+      onSuccess: () => message.success('Xoá account thành công'),
+      onError: () => message.error('Xoá account thất bại'),
+    })
+  }
+
+  const handleSave = () => {
+    form.validateFields().then((values) => {
+      if (editingAccount) {
+        updateAccountMutation.mutate(
+          { id: editingAccount.id, data: values },
+          {
+            onSuccess: () => {
+              message.success('Cập nhật account thành công')
+              setModalOpen(false)
+              form.resetFields()
+            },
+            onError: () => message.error('Cập nhật account thất bại'),
+          },
+        )
+      } else {
+        createAccount.mutate(values, {
+          onSuccess: () => {
+            message.success('Tạo account thành công')
+            setModalOpen(false)
+            form.resetFields()
+          },
+          onError: () => message.error('Tạo account thất bại'),
+        })
+      }
+    })
+  }
+
+  const columns = [
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
+    { title: 'Tên', dataIndex: 'name', key: 'name' },
+
+    {
+      title: 'Trạng thái',
+      dataIndex: 'isActive',
+      key: 'isActive',
+      render: (isActive: boolean) => (
+        <Tag color={isActive ? 'green' : 'red'}>
+          {isActive ? 'Hoạt động' : 'Không hoạt động'}
+        </Tag>
+      ),
+    },
+    { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt' },
+    { title: 'Mô tả', dataIndex: 'description', key: 'description', render: (v: string | null) => v ?? '' },
+    { title: 'Ghi chú', dataIndex: 'note', key: 'note', render: (v: string | null) => v ?? '' },
+    {
+      title: 'Hành động',
+      key: 'action',
+      render: (_: unknown, record: Account) => (
+        <Space>
+          <Button
+            type="link"
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => openDetail(record)}
+          />
+          <Button
+            type="link"
+            size="small"
+            icon={<EditOutlined />}
+            onClick={() => openEdit(record)}
+          />
+          <Popconfirm
+            title="Xoá account này?"
+            onConfirm={() => handleDelete(record)}
+            okText="Xoá"
+            cancelText="Huỷ"
+          >
+            <Button type="link" size="small" danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ]
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-semibold">Accounts</h2>
-        <Button type="primary" icon={<PlusOutlined />}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
           Thêm account
         </Button>
       </div>
-      <Table columns={columns} dataSource={mockAccounts} bordered />
+
+      <Table columns={columns} dataSource={data} bordered loading={isLoading} />
+
+      {/* Create / Edit Modal */}
+      <Modal
+        title={editingAccount ? 'Chỉnh sửa account' : 'Thêm account'}
+        open={modalOpen}
+        onOk={handleSave}
+        onCancel={() => {
+          setModalOpen(false)
+          form.resetFields()
+        }}
+        okText={editingAccount ? 'Cập nhật' : 'Tạo'}
+        cancelText="Huỷ"
+        confirmLoading={createAccount.isPending || updateAccountMutation.isPending}
+        destroyOnHidden
+      >
+        <Form form={form} layout="vertical" className="mt-4">
+          <Form.Item
+            name="name"
+            label="Tên"
+            rules={[{ required: true, message: 'Nhập tên account' }]}
+          >
+            <Input placeholder="Tên account" />
+          </Form.Item>
+
+          <Form.Item name="description" label="Mô tả">
+            <Input.TextArea placeholder="Mô tả" rows={3} />
+          </Form.Item>
+
+          <Form.Item name="note" label="Ghi chú">
+            <Input.TextArea placeholder="Ghi chú" rows={3} />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {/* Detail Modal */}
+      <Modal
+        title="Chi tiết account"
+        open={detailOpen}
+        onCancel={() => setDetailOpen(false)}
+        footer={<Button onClick={() => setDetailOpen(false)}>Đóng</Button>}
+        destroyOnHidden
+      >
+        {viewingAccount && (
+          <div className="grid grid-cols-2 gap-y-3 gap-x-4 mt-4">
+            <div>
+              <span className="text-gray-500 text-sm">ID</span>
+              <div className="font-medium">{viewingAccount.id}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Tên</span>
+              <div className="font-medium">{viewingAccount.name}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Mô tả</span>
+              <div className="font-medium">{viewingAccount.description ?? ''}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Ghi chú</span>
+              <div className="font-medium">{viewingAccount.note ?? ''}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Trạng thái</span>
+              <div>
+                <Tag color={viewingAccount.isActive ? 'green' : 'red'}>
+                  {viewingAccount.isActive ? 'Hoạt động' : 'Không hoạt động'}
+                </Tag>
+              </div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Ngày tạo</span>
+              <div className="font-medium">{viewingAccount.createdAt}</div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
