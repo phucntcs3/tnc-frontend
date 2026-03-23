@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   Popconfirm,
+  message,
 } from 'antd'
 import {
   PlusOutlined,
@@ -18,10 +19,10 @@ import {
 } from '@ant-design/icons'
 import {
   type User,
-  mockUsers,
   roleOptions,
   roleColorMap,
 } from '../data'
+import { useUsers, useCreateUser, useUpdateUser, useDeleteUser } from '../hooks/useUsers'
 
 interface UserFormValues {
   email: string
@@ -29,7 +30,11 @@ interface UserFormValues {
 }
 
 function UserPage() {
-  const [data, setData] = useState<User[]>(mockUsers)
+  const { data = [], isLoading } = useUsers()
+  const createUser = useCreateUser()
+  const updateUserMutation = useUpdateUser()
+  const deleteUserMutation = useDeleteUser()
+
   const [modalOpen, setModalOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
@@ -56,41 +61,37 @@ function UserPage() {
     setDetailOpen(true)
   }
 
-  const handleDelete = (key: string) => {
-    setData((prev) => prev.filter((item) => item.key !== key))
+  const handleDelete = (record: User) => {
+    deleteUserMutation.mutate(record.id, {
+      onSuccess: () => message.success('Xoá user thành công'),
+      onError: () => message.error('Xoá user thất bại'),
+    })
   }
 
   const handleSave = () => {
     form.validateFields().then((values) => {
-      const roleName =
-        roleOptions.find((r) => r.value === values.roleId)?.label ?? ''
-
       if (editingUser) {
-        setData((prev) =>
-          prev.map((item) =>
-            item.key === editingUser.key
-              ? { ...item, email: values.email, roleId: values.roleId, roleName }
-              : item,
-          ),
+        updateUserMutation.mutate(
+          { id: editingUser.id, data: values },
+          {
+            onSuccess: () => {
+              message.success('Cập nhật user thành công')
+              setModalOpen(false)
+              form.resetFields()
+            },
+            onError: () => message.error('Cập nhật user thất bại'),
+          },
         )
       } else {
-        const newId = Math.max(...data.map((d) => d.id), 0) + 1
-        const newUser: User = {
-          key: String(Date.now()),
-          id: newId,
-          email: values.email,
-          isActive: true,
-          isFirstLogin: true,
-          roleId: values.roleId,
-          roleName,
-          accountId: null,
-          createdAt: new Date().toISOString().split('T')[0],
-        }
-        setData((prev) => [...prev, newUser])
+        createUser.mutate(values, {
+          onSuccess: () => {
+            message.success('Tạo user thành công')
+            setModalOpen(false)
+            form.resetFields()
+          },
+          onError: () => message.error('Tạo user thất bại'),
+        })
       }
-
-      setModalOpen(false)
-      form.resetFields()
     })
   }
 
@@ -145,7 +146,7 @@ function UserPage() {
           />
           <Popconfirm
             title="Xoá user này?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record)}
             okText="Xoá"
             cancelText="Huỷ"
           >
@@ -165,7 +166,7 @@ function UserPage() {
         </Button>
       </div>
 
-      <Table columns={columns} dataSource={data} bordered />
+      <Table columns={columns} dataSource={data} bordered loading={isLoading} />
 
       {/* Create / Edit Modal */}
       <Modal
