@@ -4,7 +4,7 @@ import {
   RiseOutlined
 } from '@ant-design/icons'
 import { Card, Col, Row, Statistic, Table, Tag } from 'antd'
-import { recentOrders, dashboardStatusMap, clientStats } from '../data/dashboard'
+import { recentOrders, dashboardStatusMap, clientStats } from '../data'
 
 const columns = [
   { title: 'Mã đơn', dataIndex: 'orderId', key: 'orderId' },

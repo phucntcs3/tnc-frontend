@@ -1,6 +1,6 @@
 import { Button, Table, Tag, Space } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { mockAccounts } from '../data/accounts'
+import { mockAccounts } from '../data'
 
 const columns = [
   { title: 'Username', dataIndex: 'username', key: 'username' },

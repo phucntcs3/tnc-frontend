@@ -1,6 +1,6 @@
 import { Button, Table, Tag, Space } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { mockClients } from '../data/clients'
+import { mockClients } from '../data'
 
 const columns = [
   { title: 'Tên khách hàng', dataIndex: 'name', key: 'name' },

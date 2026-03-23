@@ -1,12 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import MainLayout from './layouts/MainLayout'
-import LoginPage from './pages/LoginPage'
-import DashboardPage from './pages/DashboardPage'
-import OrderPage from './pages/OrderPage'
-import UserPage from './pages/UserPage'
-import AccountPage from './pages/AccountPage'
-import ClientPage from './pages/ClientPage'
+import LoginPage from './features/auth/components/LoginPage'
+import DashboardPage from './features/dashboard/components/DashboardPage'
+import OrderPage from './features/orders/components/OrderPage'
+import UserPage from './features/users/components/UserPage'
+import AccountPage from './features/accounts/components/AccountPage'
+import ClientPage from './features/clients/components/ClientPage'
 
 function App() {
   return (

@@ -33,7 +33,7 @@ import {
   deliveryColorMap,
   paymentStatusColorMap,
   mockOrders,
-} from '../data/orders'
+} from '../data'
 
 interface OrderFormValues {
   date: Dayjs
@@ -274,7 +274,6 @@ function OrderPage() {
         okText={editingOrder ? 'Cập nhật' : 'Tạo'}
         cancelText="Huỷ"
         width={900}
-        destroyOnClose
         styles={{ body: { maxHeight: 'calc(90vh - 110px)', overflowY: 'auto' } }}
       >
         <Form
@@ -296,13 +295,7 @@ function OrderPage() {
               label="Client"
               rules={[{ required: true, message: 'Chọn client' }]}
             >
-              <Select
-                showSearch
-                options={clientOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={clientOptions} />
             </Form.Item>
 
             <Form.Item
@@ -318,13 +311,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="invoiceStatus" label="Invoice/Payment Status">
-              <Select
-                showSearch
-                options={invoiceStatusOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={invoiceStatusOptions} />
             </Form.Item>
 
             <Form.Item
@@ -332,13 +319,7 @@ function OrderPage() {
               label="Service"
               rules={[{ required: true, message: 'Chọn service' }]}
             >
-              <Select
-                showSearch
-                options={serviceOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={serviceOptions} />
             </Form.Item>
 
             <Form.Item name="field" label="Field">
@@ -362,13 +343,7 @@ function OrderPage() {
               label="Status"
               rules={[{ required: true, message: 'Chọn status' }]}
             >
-              <Select
-                showSearch
-                options={statusOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={statusOptions} />
             </Form.Item>
 
             <Form.Item
@@ -376,13 +351,7 @@ function OrderPage() {
               label="Assignee"
               rules={[{ required: true, message: 'Chọn assignee' }]}
             >
-              <Select
-                showSearch
-                options={assigneeOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={assigneeOptions} />
             </Form.Item>
 
             <Form.Item name="deadline" label="Deadline">
@@ -390,13 +359,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="delivery" label="Delivery">
-              <Select
-                showSearch
-                options={deliveryOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={deliveryOptions} />
             </Form.Item>
 
             <Form.Item name="cost" label="Cost">
@@ -404,13 +367,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="paymentStatus" label="Payment Status (Linguists)">
-              <Select
-                showSearch
-                options={paymentStatusOptions}
-                filterOption={(input, option) =>
-                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-                }
-              />
+              <Select showSearch options={paymentStatusOptions} />
             </Form.Item>
 
             <Form.Item name="note" label="Note" className="col-span-3">

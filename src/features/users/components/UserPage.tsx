@@ -21,7 +21,7 @@ import {
   mockUsers,
   roleOptions,
   roleColorMap,
-} from '../data/users'
+} from '../data'
 
 interface UserFormValues {
   email: string
