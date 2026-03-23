@@ -44,18 +44,20 @@ function MainLayout() {
 
   return (
     <Layout style={{ height: '100vh' }}>
-      <Sider width={220} theme="light" className="border-r border-gray-200" style={{ height: '100vh', position: 'fixed', left: 0, top: 0, overflow: 'auto' }}>
-        <div className="h-16 flex items-center justify-center border-b border-gray-200">
-          <span className="text-xl font-bold" style={{ color: '#1677ff' }}>
+      <Sider width={220} theme="dark" style={{ height: '100vh', position: 'fixed', left: 0, top: 0, overflow: 'auto', background: '#1677ff' }}>
+        <div className="h-16 flex items-center justify-center" style={{ borderBottom: '1px solid rgba(255,255,255,0.2)' }}>
+          <span className="text-xl font-bold text-white">
             TNC
           </span>
         </div>
         <Menu
           mode="inline"
+          theme="dark"
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
-          className="border-r-0 mt-2"
+          className="sidebar-menu border-r-0 mt-2"
+          style={{ background: 'transparent' }}
         />
       </Sider>
       <Layout style={{ marginLeft: 220 }}>

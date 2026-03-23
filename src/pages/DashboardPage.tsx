@@ -6,6 +6,7 @@ import {
   ReloadOutlined,
   StopOutlined,
 } from '@ant-design/icons'
+import { Pie } from '@ant-design/charts'
 
 const recentOrders = [
   {
@@ -121,36 +122,33 @@ function DashboardPage() {
 
       {/* Customer Volume */}
       <Row gutter={[16, 16]} className="mb-6">
-        <Col xs={24} sm={8}>
-          <Card style={{ background: 'linear-gradient(135deg, #52c41a, #95de64)', border: 'none' }}>
-            <Statistic
-              title={<span style={{ color: 'rgba(255,255,255,0.85)' }}>Khách mới</span>}
-              value={48}
-              prefix={<UserAddOutlined />}
-              valueStyle={{ color: '#fff' }}
+        <Col xs={24} sm={12}>
+          <Card title="Thống kê khách hàng">
+            <Pie
+              data={[
+                { type: 'Khách mới', value: 48 },
+                { type: 'Khách cũ quay lại', value: 152 },
+                { type: 'Khách không hoạt động', value: 23 },
+              ]}
+              angleField="value"
+              colorField="type"
+              innerRadius={0.6}
+              scale={{ color: { range: ['#1677ff', '#52c41a', '#bfbfbf'] } }}
+              label={{
+                text: 'value',
+                style: { fontWeight: 'bold' },
+              }}
+              legend={{
+                color: {
+                  position: 'bottom',
+                  layout: { justifyContent: 'center' },
+                },
+              }}
+              height={300}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={8}>
-          <Card style={{ background: 'linear-gradient(135deg, #eb2f96, #ff85c0)', border: 'none' }}>
-            <Statistic
-              title={<span style={{ color: 'rgba(255,255,255,0.85)' }}>Khách cũ quay lại</span>}
-              value={152}
-              prefix={<ReloadOutlined />}
-              valueStyle={{ color: '#fff' }}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={8}>
-          <Card style={{ background: 'linear-gradient(135deg, #722ed1, #b37feb)', border: 'none' }}>
-            <Statistic
-              title={<span style={{ color: 'rgba(255,255,255,0.85)' }}>Khách không hoạt động</span>}
-              value={23}
-              prefix={<StopOutlined />}
-              valueStyle={{ color: '#fff' }}
-            />
-          </Card>
-        </Col>
+
       </Row>
 
       {/* Recent Orders */}
@@ -159,6 +157,7 @@ function DashboardPage() {
           columns={columns}
           dataSource={recentOrders}
           pagination={false}
+          bordered
           size="middle"
         />
       </Card>

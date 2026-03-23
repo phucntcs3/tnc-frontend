@@ -440,6 +440,7 @@ function OrderPage() {
         columns={columns}
         dataSource={data}
         scroll={{ x: 1800 }}
+        bordered
         size="middle"
         pagination={{ pageSize: 10 }}
       />
@@ -471,7 +472,7 @@ function OrderPage() {
               label="Date"
               rules={[{ required: true, message: 'Chọn ngày' }]}
             >
-              <DatePicker className="w-full" format="YYYY-MM-DD" />
+              <DatePicker placeholder='' className="w-full" format="YYYY-MM-DD" />
             </Form.Item>
 
             <Form.Item
@@ -482,7 +483,6 @@ function OrderPage() {
               <Select
                 showSearch
                 options={clientOptions}
-                placeholder="Chọn client"
                 filterOption={(input, option) =>
                   (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
                 }
@@ -494,11 +494,11 @@ function OrderPage() {
               label="PM"
               rules={[{ required: true, message: 'Nhập PM' }]}
             >
-              <Input placeholder="Project Manager" />
+              <Input />
             </Form.Item>
 
             <Form.Item name="webPo" label="Web/PO">
-              <Input placeholder="Web/PO number" />
+              <Input />
             </Form.Item>
 
             <Form.Item name="invoiceStatus" label="Invoice/Payment Status">
@@ -526,7 +526,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="field" label="Field">
-              <Input placeholder="Field" />
+              <Input />
             </Form.Item>
 
             <Form.Item
@@ -538,7 +538,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="taskNo" label="Task No">
-              <Input placeholder="Task number" />
+              <Input />
             </Form.Item>
 
             <Form.Item
@@ -570,7 +570,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="deadline" label="Deadline">
-              <Input placeholder="Ex: 3pm 30/12, noon 7/1, ASAP" />
+              <Input />
             </Form.Item>
 
             <Form.Item name="delivery" label="Delivery">
@@ -598,7 +598,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="note" label="Note" className="col-span-3">
-              <Input.TextArea rows={2} placeholder="Ghi chú" />
+              <Input.TextArea rows={3} />
             </Form.Item>
           </div>
         </Form>

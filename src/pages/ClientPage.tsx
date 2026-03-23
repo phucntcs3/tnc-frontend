@@ -42,7 +42,7 @@ function ClientPage() {
           Thêm khách hàng
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} bordered />
     </div>
   )
 }
