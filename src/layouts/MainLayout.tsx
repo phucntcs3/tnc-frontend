@@ -5,6 +5,7 @@ import {
   UserOutlined,
   LockOutlined,
   TeamOutlined,
+  SafetyCertificateOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons'
@@ -36,6 +37,11 @@ const menuItems = [
     key: '/client',
     icon: <TeamOutlined />,
     label: 'Khách hàng',
+  },
+  {
+    key: '/role',
+    icon: <SafetyCertificateOutlined />,
+    label: 'Roles',
   },
 ]
 

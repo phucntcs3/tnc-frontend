@@ -7,6 +7,7 @@ import OrderPage from './features/orders/components/OrderPage'
 import UserPage from './features/users/components/UserPage'
 import AccountPage from './features/accounts/components/AccountPage'
 import ClientPage from './features/clients/components/ClientPage'
+import RolePage from './features/roles/components/RolePage'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/user" element={<UserPage />} />
             <Route path="/account" element={<AccountPage />} />
             <Route path="/client" element={<ClientPage />} />
+            <Route path="/role" element={<RolePage />} />
           </Route>
         </Routes>
       </BrowserRouter>

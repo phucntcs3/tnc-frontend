@@ -121,7 +121,7 @@ function UserPage() {
       dataIndex: 'isFirstLogin',
       key: 'isFirstLogin',
       render: (val: boolean) => (
-        <Tag color={val ? 'orange' : 'default'}>
+        <Tag color={val ? 'default' : 'green'}>
           {val ? 'Chưa' : 'Đã đăng nhập'}
         </Tag>
       ),
@@ -240,7 +240,7 @@ function UserPage() {
             <div>
               <span className="text-gray-500 text-sm">Đăng nhập lần đầu</span>
               <div>
-                <Tag color={viewingUser.isFirstLogin ? 'orange' : 'default'}>
+                <Tag color={viewingUser.isFirstLogin ? 'default' : 'green'}>
                   {viewingUser.isFirstLogin ? 'Chưa' : 'Đã đăng nhập'}
                 </Tag>
               </div>
