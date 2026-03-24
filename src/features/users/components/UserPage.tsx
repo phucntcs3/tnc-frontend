@@ -20,6 +20,7 @@ import {
 import type { User, UserAccount } from '../data'
 import { useUsers, useCreateUser, useUpdateUser, useDeleteUser } from '../hooks/useUsers'
 import { useRoles } from '../../roles/hooks/useRoles'
+import { useAccounts } from '../../accounts/hooks/useAccounts'
 
 const roleColorMap: Record<number, string> = {
   1: 'red',
@@ -31,11 +32,13 @@ const roleColorMap: Record<number, string> = {
 interface UserFormValues {
   email: string
   roleId: number
+  accountIds: number[]
 }
 
 function UserPage() {
   const { data = [], isLoading } = useUsers()
   const { data: roles = [] } = useRoles()
+  const { data: accounts = [] } = useAccounts()
   const createUser = useCreateUser()
   const updateUserMutation = useUpdateUser()
   const deleteUserMutation = useDeleteUser()
@@ -57,6 +60,7 @@ function UserPage() {
     form.setFieldsValue({
       email: record.email,
       roleId: record.roleId,
+      accountIds: record.accounts.map((a) => a.id),
     })
     setModalOpen(true)
   }
@@ -219,6 +223,17 @@ function UserPage() {
             <Select
               options={roles.map((r) => ({ value: r.id, label: r.name }))}
               placeholder="Chọn vai trò"
+            />
+          </Form.Item>
+
+          <Form.Item name="accountIds" label="Accounts">
+            <Select
+              mode="multiple"
+              showSearch
+              placeholder="Chọn accounts"
+              optionFilterProp="label"
+              options={accounts.map((a) => ({ value: a.id, label: a.name }))}
+              allowClear
             />
           </Form.Item>
         </Form>

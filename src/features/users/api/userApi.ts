@@ -23,12 +23,24 @@ export const getUsers = (params?: Record<string, unknown>) => {
   return axiosClient.get<{ success: boolean; data: UserResponse[] }>(ENDPOINTS.USERS, { params })
 }
 
-export const createUser = (data: { email: string; roleId: number }) => {
-  return axiosClient.post(ENDPOINTS.USERS, data)
+export interface UserPayload {
+  email: string
+  roleId: number
+  accountIds?: number[]
 }
 
-export const updateUser = (id: number, data: { email?: string; roleId?: number }) => {
-  return axiosClient.put(ENDPOINTS.USER_BY_ID(id), data)
+const toSnakeCase = (data: Partial<UserPayload>) => ({
+  email: data.email,
+  role_id: data.roleId,
+  account_ids: data.accountIds,
+})
+
+export const createUser = (data: UserPayload) => {
+  return axiosClient.post(ENDPOINTS.USERS, toSnakeCase(data))
+}
+
+export const updateUser = (id: number, data: Partial<UserPayload>) => {
+  return axiosClient.put(ENDPOINTS.USER_BY_ID(id), toSnakeCase(data))
 }
 
 export const deleteUser = (id: number) => {
