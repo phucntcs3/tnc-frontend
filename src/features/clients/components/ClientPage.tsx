@@ -1,6 +1,7 @@
 import { Button, Table, Tag, Space } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useClients } from '../hooks/useClients'
+import { ITEM_PER_PAGE } from '@/constants'
 import type { Client } from '../data'
 
 const columns = [
@@ -93,7 +94,7 @@ function ClientPage() {
           Thêm khách hàng
         </Button>
       </div>
-      <Table columns={columns} dataSource={data} bordered loading={isLoading} scroll={{ x: 1800 }} />
+      <Table columns={columns} dataSource={data} bordered loading={isLoading} pagination={{ pageSize: ITEM_PER_PAGE }} scroll={{ x: 1800 }} />
     </div>
   )
 }

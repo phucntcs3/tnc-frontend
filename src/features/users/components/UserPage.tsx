@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ITEM_PER_PAGE } from '@/constants'
 import {
   Button,
   Table,
@@ -188,7 +189,7 @@ function UserPage() {
         </Button>
       </div>
 
-      <Table columns={columns} dataSource={data} bordered loading={isLoading} />
+      <Table columns={columns} dataSource={data} bordered loading={isLoading} pagination={{ pageSize: ITEM_PER_PAGE }} />
 
       {/* Create / Edit Modal */}
       <Modal
