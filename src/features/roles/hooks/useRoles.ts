@@ -6,6 +6,7 @@ const mapRole = (r: RoleResponse): Role => ({
   key: String(r.id),
   id: r.id,
   name: r.name,
+  code: r.code,
   description: r.description,
   note: r.note,
   createdAt: r.created_at.split('T')[0],
@@ -29,7 +30,7 @@ export const useCreateRole = () => {
 export const useUpdateRole = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<{ name: string; description: string; note: string }> }) =>
+    mutationFn: ({ id, data }: { id: number; data: Partial<{ name: string; code: string; description: string; note: string }> }) =>
       updateRole(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roles'] }),
   })

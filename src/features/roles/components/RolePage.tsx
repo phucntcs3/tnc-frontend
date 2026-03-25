@@ -27,6 +27,7 @@ const getErrorMessage = (error: unknown, fallback: string) => {
 
 interface RoleFormValues {
   name: string
+  code: string
   description?: string
   note?: string
 }
@@ -53,6 +54,7 @@ function RolePage() {
     setEditingRole(record)
     form.setFieldsValue({
       name: record.name,
+      code: record.code,
       description: record.description ?? undefined,
       note: record.note ?? undefined,
     })
@@ -101,6 +103,7 @@ function RolePage() {
   const columns = [
     { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
     { title: 'Tên', dataIndex: 'name', key: 'name' },
+    { title: 'Code', dataIndex: 'code', key: 'code' },
     { title: 'Mô tả', dataIndex: 'description', key: 'description', render: (v: string | null) => v ?? '' },
     { title: 'Ghi chú', dataIndex: 'note', key: 'note', render: (v: string | null) => v ?? '' },
     { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt' },
@@ -168,6 +171,14 @@ function RolePage() {
             <Input placeholder="Tên role" />
           </Form.Item>
 
+          <Form.Item
+            name="code"
+            label="Code"
+            rules={[{ required: true, message: 'Nhập code role' }]}
+          >
+            <Input placeholder="Code role" />
+          </Form.Item>
+
           <Form.Item name="description" label="Mô tả">
             <Input.TextArea placeholder="Mô tả" rows={3} />
           </Form.Item>
@@ -195,6 +206,10 @@ function RolePage() {
             <div>
               <span className="text-gray-500 text-sm">Tên</span>
               <div className="font-medium">{viewingRole.name}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Code</span>
+              <div className="font-medium">{viewingRole.code}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Mô tả</span>
