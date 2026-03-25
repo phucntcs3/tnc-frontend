@@ -27,29 +27,49 @@ import {
   paymentStatusColorMap,
 } from '../data'
 import { useOrders } from '../hooks/useOrders'
+import {
+  useOrderStatuses,
+  useDeliveryStatuses,
+  usePaymentStatuses,
+  usePMs,
+  useInvoiceStatuses,
+  useServices,
+  useFields,
+} from '../hooks/useOrderMetadata'
+import { useClients } from '@/features/clients/hooks/useClients'
+import { useUsers } from '@/features/users/hooks/useUsers'
 import { ITEM_PER_PAGE } from '@/constants'
 
 interface OrderFormValues {
   date: Dayjs
-  client: string
-  pm: string
+  client: number
+  pm: number
   webPo: string
-  invoiceStatus: string
-  service: string
-  field: string
+  invoiceStatus: number
+  service: number
+  field: number
   amount: number
   taskNo: string
-  status: string
-  assignee: string
+  status: number
+  assignee: number
   deadline: string
   note: string
-  delivery: string
+  delivery: number
   cost: number
-  paymentStatus: string
+  paymentStatus: number
 }
 
 function OrderPage() {
   const { data = [], isLoading } = useOrders()
+  const { data: clients = [] } = useClients()
+  const { data: users = [] } = useUsers()
+  const { data: orderStatuses = [] } = useOrderStatuses()
+  const { data: deliveryStatuses = [] } = useDeliveryStatuses()
+  const { data: paymentStatuses = [] } = usePaymentStatuses()
+  const { data: pms = [] } = usePMs()
+  const { data: invoiceStatuses = [] } = useInvoiceStatuses()
+  const { data: services = [] } = useServices()
+  const { data: fields = [] } = useFields()
   const [modalOpen, setModalOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [editingOrder, setEditingOrder] = useState<Order | null>(null)
@@ -65,8 +85,22 @@ function OrderPage() {
   const openEdit = (record: Order) => {
     setEditingOrder(record)
     form.setFieldsValue({
-      ...record,
       date: dayjs(record.date),
+      client: record.client?.id,
+      pm: record.pm?.id,
+      webPo: record.webPo,
+      invoiceStatus: record.invoiceStatus?.id,
+      service: record.service?.id,
+      field: record.field?.id,
+      amount: record.amount,
+      taskNo: record.taskNo,
+      status: record.orderStatus?.id,
+      assignee: record.user?.id,
+      deadline: record.deadlineNote,
+      delivery: record.deliveryStatus?.id,
+      cost: record.cost,
+      paymentStatus: record.paymentStatus?.id,
+      note: record.note,
     })
     setModalOpen(true)
   }
@@ -291,15 +325,23 @@ function OrderPage() {
               label="Client"
               rules={[{ required: true, message: 'Chọn client' }]}
             >
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={clients.map((c) => ({ value: c.id, label: c.name }))}
+              />
             </Form.Item>
 
             <Form.Item
               name="pm"
               label="PM"
-              rules={[{ required: true, message: 'Nhập PM' }]}
+              rules={[{ required: true, message: 'Chọn PM' }]}
             >
-              <Input />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={pms.map((p) => ({ value: p.id, label: p.name }))}
+              />
             </Form.Item>
 
             <Form.Item name="webPo" label="Web/PO">
@@ -307,7 +349,11 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="invoiceStatus" label="Invoice/Payment Status">
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={invoiceStatuses.map((s) => ({ value: s.id, label: s.name }))}
+              />
             </Form.Item>
 
             <Form.Item
@@ -315,11 +361,19 @@ function OrderPage() {
               label="Service"
               rules={[{ required: true, message: 'Chọn service' }]}
             >
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={services.map((s) => ({ value: s.id, label: s.name }))}
+              />
             </Form.Item>
 
             <Form.Item name="field" label="Field">
-              <Input />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={fields.map((f) => ({ value: f.id, label: f.name }))}
+              />
             </Form.Item>
 
             <Form.Item
@@ -339,7 +393,11 @@ function OrderPage() {
               label="Status"
               rules={[{ required: true, message: 'Chọn status' }]}
             >
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={orderStatuses.map((s) => ({ value: s.id, label: s.name }))}
+              />
             </Form.Item>
 
             <Form.Item
@@ -347,7 +405,11 @@ function OrderPage() {
               label="Assignee"
               rules={[{ required: true, message: 'Chọn assignee' }]}
             >
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={users.map((u) => ({ value: u.id, label: u.email }))}
+              />
             </Form.Item>
 
             <Form.Item name="deadline" label="Deadline">
@@ -355,7 +417,11 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="delivery" label="Delivery">
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={deliveryStatuses.map((s) => ({ value: s.id, label: s.name }))}
+              />
             </Form.Item>
 
             <Form.Item name="cost" label="Cost">
@@ -363,7 +429,11 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="paymentStatus" label="Payment Status (Linguists)">
-              <Select showSearch />
+              <Select
+                showSearch
+                optionFilterProp="label"
+                options={paymentStatuses.map((s) => ({ value: s.id, label: s.name }))}
+              />
             </Form.Item>
 
             <Form.Item name="note" label="Note" className="col-span-3">
