@@ -53,3 +53,53 @@ export const clientStats = [
   { type: 'Khách cũ quay lại', value: 152 },
   { type: 'Khách không hoạt động', value: 23 },
 ]
+
+function randomRevenue(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function getDaysInMonth(year: number, month: number) {
+  return new Date(year, month + 1, 0).getDate()
+}
+
+export function getRevenueData(tab: string): { period: string; revenue: number }[] {
+  const now = new Date()
+
+  if (tab === 'week') {
+    return [
+      { period: 'T2', revenue: randomRevenue(3000000, 8000000) },
+      { period: 'T3', revenue: randomRevenue(3000000, 8000000) },
+      { period: 'T4', revenue: randomRevenue(3000000, 8000000) },
+      { period: 'T5', revenue: randomRevenue(3000000, 8000000) },
+      { period: 'T6', revenue: randomRevenue(3000000, 8000000) },
+      { period: 'T7', revenue: randomRevenue(3000000, 8000000) },
+      { period: 'CN', revenue: randomRevenue(3000000, 8000000) },
+    ]
+  }
+
+  if (tab === 'month') {
+    const days = getDaysInMonth(now.getFullYear(), now.getMonth())
+    return Array.from({ length: days }, (_, i) => ({
+      period: `${i + 1}`,
+      revenue: randomRevenue(2000000, 8000000),
+    }))
+  }
+
+  if (tab === 'quarter') {
+    return [
+      { period: 'Quý 1', revenue: randomRevenue(250000000, 350000000) },
+      { period: 'Quý 2', revenue: randomRevenue(250000000, 350000000) },
+      { period: 'Quý 3', revenue: randomRevenue(250000000, 350000000) },
+    ]
+  }
+
+  // year
+  const monthNames = [
+    'Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6',
+    'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12',
+  ]
+  return monthNames.map((name) => ({
+    period: name,
+    revenue: randomRevenue(80000000, 150000000),
+  }))
+}

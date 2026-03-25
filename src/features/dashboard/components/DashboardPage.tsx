@@ -1,10 +1,19 @@
-import { Pie } from '@ant-design/charts'
+import { Line, Pie } from '@ant-design/charts'
 import {
   DollarOutlined,
   RiseOutlined
 } from '@ant-design/icons'
-import { Card, Col, Row, Statistic, Table, Tag } from 'antd'
-import { recentOrders, dashboardStatusMap, clientStats } from '../data'
+import { Card, Col, Row, Statistic, Table, Tabs, Tag } from 'antd'
+import { useState } from 'react'
+import { recentOrders, dashboardStatusMap, clientStats, getRevenueData } from '../data'
+import { useMemo } from 'react'
+
+const revenueTabs = [
+  { key: 'week', label: 'Tuần' },
+  { key: 'month', label: 'Tháng' },
+  { key: 'quarter', label: 'Quý' },
+  { key: 'year', label: 'Năm' },
+]
 
 const columns = [
   { title: 'Mã đơn', dataIndex: 'orderId', key: 'orderId' },
@@ -28,6 +37,9 @@ const columns = [
 ]
 
 function DashboardPage() {
+  const [revenueTab, setRevenueTab] = useState('week')
+  const revenueChartData = useMemo(() => getRevenueData(revenueTab), [revenueTab])
+
   return (
     <div>
       <h2 className="text-2xl font-semibold mb-6">Dashboard</h2>
@@ -77,7 +89,7 @@ function DashboardPage() {
               angleField="value"
               colorField="type"
               innerRadius={0.6}
-              scale={{ color: { range: ['#1677ff', '#52c41a', '#bfbfbf'] } }}
+              scale={{ color: { range: ['#4096ff', '#389e0d', '#ff7875'] } }}
               label={{
                 text: 'value',
                 style: { fontWeight: 'bold' },
@@ -94,6 +106,44 @@ function DashboardPage() {
         </Col>
 
       </Row>
+
+      {/* Revenue Chart */}
+      <Card
+        title="Biểu đồ doanh thu"
+        className="mb-6"
+        extra={
+          <Tabs
+            activeKey={revenueTab}
+            onChange={setRevenueTab}
+            items={revenueTabs}
+            size="small"
+          />
+        }
+      >
+        <Line
+          data={revenueChartData}
+          xField="period"
+          yField="revenue"
+          shapeField="smooth"
+          style={{ stroke: '#1677ff', lineWidth: 2 }}
+          point={{ shapeField: 'circle', sizeField: 3 }}
+          axis={{
+            y: {
+              labelFormatter: (v: number) => (v / 1000000).toFixed(0) + 'tr',
+            },
+          }}
+          tooltip={{
+            items: [
+              {
+                field: 'revenue',
+                name: 'Doanh thu',
+                valueFormatter: (v: number) => v.toLocaleString('vi-VN') + ' ₫',
+              },
+            ],
+          }}
+          height={350}
+        />
+      </Card>
 
       {/* Recent Orders */}
       <Card title="5 đơn hàng mới nhất">
