@@ -8,6 +8,7 @@ import {
   Modal,
   Form,
   Input,
+  Select,
   Popconfirm,
   message,
 } from 'antd'
@@ -19,11 +20,13 @@ import {
 } from '@ant-design/icons'
 import type { Account, AccountUser } from '../data'
 import { useAccounts, useCreateAccount, useUpdateAccount, useDeleteAccount } from '../hooks/useAccounts'
+import { useUsers } from '@/features/users/hooks/useUsers'
 
 interface AccountFormValues {
   name: string
   description?: string
   note?: string
+  userIds?: number[]
 }
 
 function AccountPage() {
@@ -36,6 +39,7 @@ function AccountPage() {
   const [detailOpen, setDetailOpen] = useState(false)
   const [editingAccount, setEditingAccount] = useState<Account | null>(null)
   const [viewingAccount, setViewingAccount] = useState<Account | null>(null)
+  const { data: users = [] } = useUsers()
   const [form] = Form.useForm<AccountFormValues>()
 
   const openCreate = () => {
@@ -50,6 +54,7 @@ function AccountPage() {
       name: record.name,
       description: record.description ?? undefined,
       note: record.note ?? undefined,
+      userIds: record.users.map((u) => u.id),
     })
     setModalOpen(true)
   }
@@ -94,7 +99,6 @@ function AccountPage() {
   }
 
   const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
     { title: 'Tên', dataIndex: 'name', key: 'name' },
     {
       title: 'Users',
@@ -183,6 +187,16 @@ function AccountPage() {
             rules={[{ required: true, message: 'Nhập tên account' }]}
           >
             <Input placeholder="Tên account" />
+          </Form.Item>
+
+          <Form.Item name="userIds" label="Users">
+            <Select
+              mode="multiple"
+              showSearch
+              placeholder="Chọn user"
+              optionFilterProp="label"
+              options={users.map((u) => ({ label: u.email, value: u.id }))}
+            />
           </Form.Item>
 
           <Form.Item name="description" label="Mô tả">

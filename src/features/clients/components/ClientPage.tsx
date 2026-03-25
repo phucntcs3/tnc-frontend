@@ -5,7 +5,6 @@ import { ITEM_PER_PAGE } from '@/constants'
 import type { Client } from '../data'
 
 const columns = [
-  { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
   { title: 'Tên khách hàng', dataIndex: 'name', key: 'name' },
   { title: 'Địa điểm', dataIndex: 'location', key: 'location', render: (v: string | null) => v ?? '' },
   {

@@ -106,7 +106,6 @@ function UserPage() {
   }
 
   const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     {
       title: 'Vai trò',
