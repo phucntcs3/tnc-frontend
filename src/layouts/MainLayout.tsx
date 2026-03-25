@@ -23,27 +23,27 @@ const menuItems = [
     label: 'Dashboard',
   },
   {
-    key: '/order',
+    key: '/orders',
     icon: <ShoppingCartOutlined />,
     label: 'Đơn hàng',
   },
   {
-    key: '/user',
+    key: '/users',
     icon: <UserOutlined />,
     label: 'Users',
   },
   {
-    key: '/account',
+    key: '/accounts',
     icon: <LockOutlined />,
     label: 'Accounts',
   },
   {
-    key: '/client',
+    key: '/clients',
     icon: <TeamOutlined />,
     label: 'Khách hàng',
   },
   {
-    key: '/role',
+    key: '/roles',
     icon: <SafetyCertificateOutlined />,
     label: 'Roles',
   },

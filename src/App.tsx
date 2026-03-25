@@ -22,11 +22,11 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/order" element={<OrderPage />} />
-            <Route path="/user" element={<UserPage />} />
-            <Route path="/account" element={<AccountPage />} />
-            <Route path="/client" element={<ClientPage />} />
-            <Route path="/role" element={<RolePage />} />
+            <Route path="/orders" element={<OrderPage />} />
+            <Route path="/users" element={<UserPage />} />
+            <Route path="/accounts" element={<AccountPage />} />
+            <Route path="/clients" element={<ClientPage />} />
+            <Route path="/roles" element={<RolePage />} />
           </Route>
         </Routes>
       </BrowserRouter>
