@@ -15,8 +15,14 @@ import {
   DeleteOutlined,
   EyeOutlined,
 } from '@ant-design/icons'
+import type { AxiosError } from 'axios'
 import type { Role } from '../data'
 import { useRoles, useCreateRole, useUpdateRole, useDeleteRole } from '../hooks/useRoles'
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+  const msg = (error as AxiosError<{ message?: string }>)?.response?.data?.message
+  return msg || fallback
+}
 
 interface RoleFormValues {
   name: string
@@ -60,7 +66,7 @@ function RolePage() {
   const handleDelete = (record: Role) => {
     deleteRoleMutation.mutate(record.id, {
       onSuccess: () => message.success('Xoá role thành công'),
-      onError: () => message.error('Xoá role thất bại'),
+      onError: (error) => message.error(getErrorMessage(error, 'Xoá role thất bại')),
     })
   }
 
@@ -75,7 +81,7 @@ function RolePage() {
               setModalOpen(false)
               form.resetFields()
             },
-            onError: () => message.error('Cập nhật role thất bại'),
+            onError: (error) => message.error(getErrorMessage(error, 'Cập nhật role thất bại')),
           },
         )
       } else {
@@ -85,7 +91,7 @@ function RolePage() {
             setModalOpen(false)
             form.resetFields()
           },
-          onError: () => message.error('Tạo role thất bại'),
+          onError: (error) => message.error(getErrorMessage(error, 'Tạo role thất bại')),
         })
       }
     })
