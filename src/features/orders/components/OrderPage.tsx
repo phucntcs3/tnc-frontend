@@ -21,19 +21,13 @@ import {
 import dayjs, { type Dayjs } from 'dayjs'
 import {
   type Order,
-  clientOptions,
-  invoiceStatusOptions,
-  serviceOptions,
-  statusOptions,
-  assigneeOptions,
-  deliveryOptions,
-  paymentStatusOptions,
   invoiceStatusColorMap,
   statusColorMap,
   deliveryColorMap,
   paymentStatusColorMap,
-  mockOrders,
 } from '../data'
+import { useOrders } from '../hooks/useOrders'
+import { ITEM_PER_PAGE } from '@/constants'
 
 interface OrderFormValues {
   date: Dayjs
@@ -55,7 +49,7 @@ interface OrderFormValues {
 }
 
 function OrderPage() {
-  const [data, setData] = useState<Order[]>(mockOrders)
+  const { data = [], isLoading } = useOrders()
   const [modalOpen, setModalOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [editingOrder, setEditingOrder] = useState<Order | null>(null)
@@ -82,28 +76,13 @@ function OrderPage() {
     setDetailOpen(true)
   }
 
-  const handleDelete = (key: string) => {
-    setData((prev) => prev.filter((item) => item.key !== key))
+  const handleDelete = (_key: string) => {
+    // TODO: implement with useDeleteOrder
   }
 
   const handleSave = () => {
-    form.validateFields().then((values) => {
-      const order: Order = {
-        ...values,
-        date: values.date.format('YYYY-MM-DD'),
-        key: editingOrder
-          ? editingOrder.key
-          : String(Date.now()),
-      }
-
-      if (editingOrder) {
-        setData((prev) =>
-          prev.map((item) => (item.key === editingOrder.key ? order : item)),
-        )
-      } else {
-        setData((prev) => [...prev, order])
-      }
-
+    form.validateFields().then((_values) => {
+      // TODO: implement with useCreateOrder / useUpdateOrder
       setModalOpen(false)
       form.resetFields()
     })
@@ -118,15 +97,15 @@ function OrderPage() {
     },
     {
       title: 'Client',
-      dataIndex: 'client',
       key: 'client',
       width: 140,
+      render: (_: unknown, record: Order) => record.client?.name ?? '—',
     },
     {
       title: 'PM',
-      dataIndex: 'pm',
       key: 'pm',
       width: 80,
+      render: (_: unknown, record: Order) => record.pm?.name ?? '—',
     },
     {
       title: 'Web/PO',
@@ -136,25 +115,29 @@ function OrderPage() {
     },
     {
       title: 'Invoice',
-      dataIndex: 'invoiceStatus',
       key: 'invoiceStatus',
       width: 100,
-      render: (val: string) => <Tag color={invoiceStatusColorMap[val]}>{val}</Tag>,
+      render: (_: unknown, record: Order) => {
+        const name = record.invoiceStatus?.name
+        return name ? <Tag color={invoiceStatusColorMap[name]}>{name}</Tag> : '—'
+      },
     },
     {
       title: 'Service',
-      dataIndex: 'service',
       key: 'service',
       width: 80,
-      render: (val: string) => (
-        <Tag color={val === 'Job' ? 'blue' : 'purple'}>{val}</Tag>
-      ),
+      render: (_: unknown, record: Order) => {
+        const name = record.service?.name
+        return name ? (
+          <Tag color={name === 'Job' ? 'blue' : 'purple'}>{name}</Tag>
+        ) : '—'
+      },
     },
     {
       title: 'Field',
-      dataIndex: 'field',
       key: 'field',
       width: 100,
+      render: (_: unknown, record: Order) => record.field?.name ?? '—',
     },
     {
       title: 'Amount',
@@ -171,45 +154,57 @@ function OrderPage() {
     },
     {
       title: 'Status',
-      dataIndex: 'status',
       key: 'status',
       width: 110,
-      render: (val: string) => <Tag color={statusColorMap[val]}>{val}</Tag>,
+      render: (_: unknown, record: Order) => {
+        const name = record.orderStatus?.name
+        return name ? <Tag color={statusColorMap[name]}>{name}</Tag> : '—'
+      },
     },
     {
       title: 'Assignee',
-      dataIndex: 'assignee',
       key: 'assignee',
       width: 120,
+      render: (_: unknown, record: Order) => record.user?.email ?? '—',
     },
     {
       title: 'Deadline',
-      dataIndex: 'deadline',
+      dataIndex: 'deadlineNote',
       key: 'deadline',
       width: 110,
     },
     {
       title: 'Delivery',
-      dataIndex: 'delivery',
       key: 'delivery',
       width: 100,
-      render: (val: string) => <Tag color={deliveryColorMap[val]}>{val}</Tag>,
+      render: (_: unknown, record: Order) => {
+        const name = record.deliveryStatus?.name
+        return name ? <Tag color={deliveryColorMap[name]}>{name}</Tag> : '—'
+      },
     },
     {
       title: 'Cost',
       dataIndex: 'cost',
       key: 'cost',
       width: 90,
-      render: (val: number) => `$${val.toLocaleString()}`,
+      render: (val: number) => val.toLocaleString(),
     },
     {
       title: 'Payment',
-      dataIndex: 'paymentStatus',
       key: 'paymentStatus',
       width: 100,
-      render: (val: string) => (
-        <Tag color={paymentStatusColorMap[val]}>{val}</Tag>
-      ),
+      render: (_: unknown, record: Order) => {
+        const name = record.paymentStatus?.name
+        return name ? (
+          <Tag color={paymentStatusColorMap[name]}>{name}</Tag>
+        ) : '—'
+      },
+    },
+    {
+      title: 'Account',
+      key: 'account',
+      width: 100,
+      render: (_: unknown, record: Order) => record.account?.name ?? '—',
     },
     {
       title: 'Actions',
@@ -255,10 +250,11 @@ function OrderPage() {
       <Table
         columns={columns}
         dataSource={data}
+        loading={isLoading}
         scroll={{ x: 1800 }}
         bordered
         size="middle"
-        pagination={{ pageSize: 10 }}
+        pagination={{ pageSize: ITEM_PER_PAGE }}
       />
 
       {/* Create / Edit Modal */}
@@ -295,7 +291,7 @@ function OrderPage() {
               label="Client"
               rules={[{ required: true, message: 'Chọn client' }]}
             >
-              <Select showSearch options={clientOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item
@@ -311,7 +307,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="invoiceStatus" label="Invoice/Payment Status">
-              <Select showSearch options={invoiceStatusOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item
@@ -319,7 +315,7 @@ function OrderPage() {
               label="Service"
               rules={[{ required: true, message: 'Chọn service' }]}
             >
-              <Select showSearch options={serviceOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item name="field" label="Field">
@@ -343,7 +339,7 @@ function OrderPage() {
               label="Status"
               rules={[{ required: true, message: 'Chọn status' }]}
             >
-              <Select showSearch options={statusOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item
@@ -351,7 +347,7 @@ function OrderPage() {
               label="Assignee"
               rules={[{ required: true, message: 'Chọn assignee' }]}
             >
-              <Select showSearch options={assigneeOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item name="deadline" label="Deadline">
@@ -359,7 +355,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="delivery" label="Delivery">
-              <Select showSearch options={deliveryOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item name="cost" label="Cost">
@@ -367,7 +363,7 @@ function OrderPage() {
             </Form.Item>
 
             <Form.Item name="paymentStatus" label="Payment Status (Linguists)">
-              <Select showSearch options={paymentStatusOptions} />
+              <Select showSearch />
             </Form.Item>
 
             <Form.Item name="note" label="Note" className="col-span-3">
@@ -396,27 +392,27 @@ function OrderPage() {
             </div>
             <div>
               <span className="text-gray-500 text-sm">Client</span>
-              <div className="font-medium">{viewingOrder.client}</div>
+              <div className="font-medium">{viewingOrder.client?.name ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">PM</span>
-              <div className="font-medium">{viewingOrder.pm}</div>
+              <div className="font-medium">{viewingOrder.pm?.name ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Web/PO</span>
-              <div className="font-medium">{viewingOrder.webPo}</div>
+              <div className="font-medium">{viewingOrder.webPo ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Invoice Status</span>
-              <div><Tag color={invoiceStatusColorMap[viewingOrder.invoiceStatus]}>{viewingOrder.invoiceStatus}</Tag></div>
+              <div>{viewingOrder.invoiceStatus ? <Tag color={invoiceStatusColorMap[viewingOrder.invoiceStatus.name]}>{viewingOrder.invoiceStatus.name}</Tag> : '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Service</span>
-              <div><Tag color={viewingOrder.service === 'Job' ? 'blue' : 'purple'}>{viewingOrder.service}</Tag></div>
+              <div>{viewingOrder.service ? <Tag color={viewingOrder.service.name === 'Job' ? 'blue' : 'purple'}>{viewingOrder.service.name}</Tag> : '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Field</span>
-              <div className="font-medium">{viewingOrder.field}</div>
+              <div className="font-medium">{viewingOrder.field?.name ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Amount</span>
@@ -424,31 +420,39 @@ function OrderPage() {
             </div>
             <div>
               <span className="text-gray-500 text-sm">Task No</span>
-              <div className="font-medium">{viewingOrder.taskNo}</div>
+              <div className="font-medium">{viewingOrder.taskNo ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Status</span>
-              <div><Tag color={statusColorMap[viewingOrder.status]}>{viewingOrder.status}</Tag></div>
+              <div>{viewingOrder.orderStatus ? <Tag color={statusColorMap[viewingOrder.orderStatus.name]}>{viewingOrder.orderStatus.name}</Tag> : '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Assignee</span>
-              <div className="font-medium">{viewingOrder.assignee}</div>
+              <div className="font-medium">{viewingOrder.user?.email ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Deadline</span>
-              <div className="font-medium">{viewingOrder.deadline}</div>
+              <div className="font-medium">{viewingOrder.deadlineNote ?? '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Delivery</span>
-              <div><Tag color={deliveryColorMap[viewingOrder.delivery]}>{viewingOrder.delivery}</Tag></div>
+              <div>{viewingOrder.deliveryStatus ? <Tag color={deliveryColorMap[viewingOrder.deliveryStatus.name]}>{viewingOrder.deliveryStatus.name}</Tag> : '—'}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Cost</span>
-              <div className="font-medium">${viewingOrder.cost.toLocaleString()}</div>
+              <div className="font-medium">{viewingOrder.cost.toLocaleString()}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Payment Status</span>
-              <div><Tag color={paymentStatusColorMap[viewingOrder.paymentStatus]}>{viewingOrder.paymentStatus}</Tag></div>
+              <div>{viewingOrder.paymentStatus ? <Tag color={paymentStatusColorMap[viewingOrder.paymentStatus.name]}>{viewingOrder.paymentStatus.name}</Tag> : '—'}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Account</span>
+              <div className="font-medium">{viewingOrder.account?.name ?? '—'}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Exchange Rate</span>
+              <div className="font-medium">{viewingOrder.exchangeRate.toLocaleString()}</div>
             </div>
             <div className="col-span-3">
               <span className="text-gray-500 text-sm">Note</span>

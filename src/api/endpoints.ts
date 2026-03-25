@@ -13,4 +13,7 @@ export const ENDPOINTS = {
 
   CLIENTS: '/clients',
   CLIENT_BY_ID: (id: number) => `/clients/${id}`,
+
+  ORDERS: '/orders',
+  ORDER_BY_ID: (id: number) => `/orders/${id}`,
 }
