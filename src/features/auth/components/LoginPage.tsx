@@ -1,8 +1,8 @@
-import { Button, Form, Input, Typography } from 'antd'
+import { Button, Form, Input, Typography, message } from 'antd'
 import { useLogin } from '../hooks/useAuth'
 import { useDispatch } from 'react-redux'
 import { setToken } from '../authSlice'
-import { useNavigate } from 'react-router'
+import { useNavigate, Link } from 'react-router-dom'
 
 const { Title } = Typography
 
@@ -19,7 +19,11 @@ function LoginPage() {
   const onFinish = (values: LoginForm) => {
     login.mutate(values, {
       onSuccess: (data) => {
-        dispatch(setToken(data.access_token))
+        if (!data.success) {
+          message.error(data.message)
+          return
+        }
+        dispatch(setToken(data.data.access_token))
         navigate('/dashboard')
       },
     })
@@ -50,9 +54,11 @@ function LoginPage() {
           </Form.Item>
 
           <div className="mb-4 text-right">
-            <Button type="link" className="p-0!">
-              Quên mật khẩu?
-            </Button>
+            <Link to="/forgot-password">
+              <Button type="link" className="p-0!">
+                Quên mật khẩu?
+              </Button>
+            </Link>
           </div>
 
           <Form.Item>

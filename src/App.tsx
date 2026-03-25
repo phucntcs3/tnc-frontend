@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 import MainLayout from './layouts/MainLayout'
 import LoginPage from './features/auth/components/LoginPage'
+import ForgotPasswordPage from './features/auth/components/ForgotPasswordPage'
+import ResetPasswordPage from './features/auth/components/ResetPasswordPage'
 import DashboardPage from './features/dashboard/components/DashboardPage'
 import OrderPage from './features/orders/components/OrderPage'
 import UserPage from './features/users/components/UserPage'
@@ -15,6 +17,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route element={<MainLayout />}>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardPage />} />
