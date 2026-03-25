@@ -54,6 +54,14 @@ export const clientStats = [
   { type: 'Khách không hoạt động', value: 23 },
 ]
 
+export const topEmployees = [
+  { name: 'Nguyễn Văn A', revenue: 32000000 },
+  { name: 'Trần Thị B', revenue: 28500000 },
+  { name: 'Lê Văn C', revenue: 24000000 },
+  { name: 'Phạm Thị D', revenue: 19500000 },
+  { name: 'Hoàng Văn E', revenue: 15000000 },
+]
+
 function randomRevenue(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
