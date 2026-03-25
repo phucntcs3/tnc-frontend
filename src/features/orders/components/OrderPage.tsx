@@ -11,6 +11,7 @@ import {
   Select,
   DatePicker,
   Popconfirm,
+  message,
 } from 'antd'
 import {
   PlusOutlined,
@@ -26,7 +27,7 @@ import {
   deliveryColorMap,
   paymentStatusColorMap,
 } from '../data'
-import { useOrders } from '../hooks/useOrders'
+import { useOrders, useCreateOrder, useUpdateOrder, useDeleteOrder } from '../hooks/useOrders'
 import {
   useOrderStatuses,
   useDeliveryStatuses,
@@ -52,7 +53,8 @@ interface OrderFormValues {
   taskNo: string
   status: number
   assignee: number
-  deadline: string
+  deadlineAt: Dayjs
+  deadlineNote: string
   note: string
   delivery: number
   cost: number
@@ -70,6 +72,9 @@ function OrderPage() {
   const { data: invoiceStatuses = [] } = useInvoiceStatuses()
   const { data: services = [] } = useServices()
   const { data: fields = [] } = useFields()
+  const createOrder = useCreateOrder()
+  const updateOrderMutation = useUpdateOrder()
+  const deleteOrder = useDeleteOrder()
   const [modalOpen, setModalOpen] = useState(false)
   const [detailOpen, setDetailOpen] = useState(false)
   const [editingOrder, setEditingOrder] = useState<Order | null>(null)
@@ -88,19 +93,20 @@ function OrderPage() {
       date: dayjs(record.date),
       client: record.client?.id,
       pm: record.pm?.id,
-      webPo: record.webPo,
+      webPo: record.webPo ?? undefined,
       invoiceStatus: record.invoiceStatus?.id,
       service: record.service?.id,
       field: record.field?.id,
       amount: record.amount,
-      taskNo: record.taskNo,
+      taskNo: record.taskNo ?? undefined,
       status: record.orderStatus?.id,
       assignee: record.user?.id,
-      deadline: record.deadlineNote,
+      deadlineAt: record.deadlineAt ? dayjs(record.deadlineAt) : undefined,
+      deadlineNote: record.deadlineNote ?? undefined,
       delivery: record.deliveryStatus?.id,
       cost: record.cost,
       paymentStatus: record.paymentStatus?.id,
-      note: record.note,
+      note: record.note ?? undefined,
     })
     setModalOpen(true)
   }
@@ -110,15 +116,57 @@ function OrderPage() {
     setDetailOpen(true)
   }
 
-  const handleDelete = (_key: string) => {
-    // TODO: implement with useDeleteOrder
+  const handleDelete = (id: number) => {
+    deleteOrder.mutate(id, {
+      onSuccess: () => message.success('Xoá đơn hàng thành công'),
+      onError: (err: unknown) => {
+        const msg =
+          (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+          'Xoá đơn hàng thất bại'
+        message.error(msg)
+      },
+    })
   }
 
   const handleSave = () => {
-    form.validateFields().then((_values) => {
-      // TODO: implement with useCreateOrder / useUpdateOrder
-      setModalOpen(false)
-      form.resetFields()
+    form.validateFields().then((values) => {
+      const payload: Record<string, unknown> = {
+        date: values.date.format('YYYY-MM-DD'),
+        client_id: values.client,
+        pm_id: values.pm,
+        web_po: values.webPo,
+        invoice_status_id: values.invoiceStatus,
+        service_id: values.service,
+        field_id: values.field,
+        amount: values.amount,
+        task_no: values.taskNo,
+        order_status_id: values.status,
+        user_id: values.assignee,
+        deadline_at: values.deadlineAt ? values.deadlineAt.format('YYYY-MM-DD') : undefined,
+        deadline_note: values.deadlineNote,
+        delivery_status_id: values.delivery,
+        cost: values.cost,
+        payment_status_id: values.paymentStatus,
+        note: values.note,
+      }
+
+      const onSuccess = () => {
+        message.success(editingOrder ? 'Cập nhật đơn hàng thành công' : 'Tạo đơn hàng thành công')
+        setModalOpen(false)
+        form.resetFields()
+      }
+      const onError = (err: unknown) => {
+        const msg =
+          (err as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+          'Lưu đơn hàng thất bại'
+        message.error(msg)
+      }
+
+      if (editingOrder) {
+        updateOrderMutation.mutate({ id: editingOrder.id, data: payload }, { onSuccess, onError })
+      } else {
+        createOrder.mutate(payload, { onSuccess, onError })
+      }
     })
   }
 
@@ -203,9 +251,9 @@ function OrderPage() {
     },
     {
       title: 'Deadline',
-      dataIndex: 'deadlineNote',
       key: 'deadline',
       width: 110,
+      render: (_: unknown, record: Order) => record.deadlineAt ? record.deadlineAt.split('T')[0] : '—',
     },
     {
       title: 'Delivery',
@@ -261,7 +309,7 @@ function OrderPage() {
           />
           <Popconfirm
             title="Xoá đơn hàng này?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record.id)}
             okText="Xoá"
             cancelText="Huỷ"
           >
@@ -296,6 +344,7 @@ function OrderPage() {
         title={editingOrder ? 'Chỉnh sửa đơn hàng' : 'Thêm đơn hàng'}
         open={modalOpen}
         onOk={handleSave}
+        confirmLoading={createOrder.isPending || updateOrderMutation.isPending}
         destroyOnHidden
         onCancel={() => {
           setModalOpen(false)
@@ -412,7 +461,11 @@ function OrderPage() {
               />
             </Form.Item>
 
-            <Form.Item name="deadline" label="Deadline">
+            <Form.Item name="deadlineAt" label="Deadline Date">
+              <DatePicker placeholder='' className="w-full" format="YYYY-MM-DD" />
+            </Form.Item>
+
+            <Form.Item name="deadlineNote" label="Deadline Note">
               <Input />
             </Form.Item>
 
@@ -501,7 +554,11 @@ function OrderPage() {
               <div className="font-medium">{viewingOrder.user?.email ?? '—'}</div>
             </div>
             <div>
-              <span className="text-gray-500 text-sm">Deadline</span>
+              <span className="text-gray-500 text-sm">Deadline Date</span>
+              <div className="font-medium">{viewingOrder.deadlineAt ? viewingOrder.deadlineAt.split('T')[0] : '—'}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">Deadline Note</span>
               <div className="font-medium">{viewingOrder.deadlineNote ?? '—'}</div>
             </div>
             <div>
