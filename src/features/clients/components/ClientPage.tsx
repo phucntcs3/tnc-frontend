@@ -47,6 +47,14 @@ const columns = [
           return r ? `${parseFloat(r.amount)} ${r.currency.code}/${r.unit.name}` : ''
         },
       },
+      {
+        title: 'Hourly rate',
+        key: 'rate_hourly',
+        render: (_: unknown, record: Client) => {
+          const r = record.rates.find((r) => r.serviceType.code === 'HOURLY')
+          return r ? `${parseFloat(r.amount)} ${r.currency.code}/${r.unit.name}` : ''
+        },
+      },
     ],
   },
   {
