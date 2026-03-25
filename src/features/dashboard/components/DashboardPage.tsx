@@ -5,7 +5,7 @@ import {
 } from '@ant-design/icons'
 import { Card, Col, Row, Space, Statistic, Table, Tabs, Tag } from 'antd'
 import { useState } from 'react'
-import { recentOrders, dashboardStatusMap, clientStats, getRevenueData, topEmployees } from '../data'
+import { recentOrders, dashboardStatusMap, clientStats, getRevenueData, topEmployees, topAccounts } from '../data'
 import { useMemo } from 'react'
 
 const revenueTabs = [
@@ -118,6 +118,52 @@ function DashboardPage() {
           />
         </Card>
 
+
+
+        {/* Top Employees & Accounts */}
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={12}>
+            <Card title="Top 5 account doanh thu cao nhất tháng">
+              <Bar
+                data={[...topAccounts].reverse()}
+                xField="name"
+                yField="revenue"
+                color="#fa8c16"
+                label={{
+                  text: (d: { revenue: number }) => d.revenue.toLocaleString('vi-VN') + ' ₫',
+                  position: 'outside',
+                  style: { fontSize: 11 },
+                }}
+                axis={{
+                  y: { labelFormatter: (v: number) => (v / 1000000).toFixed(0) + 'tr' },
+                }}
+                height={300}
+              />
+            </Card>
+          </Col>
+
+          <Col xs={24} sm={12}>
+            <Card title="Top 5 sale doanh thu cao nhất tháng">
+              <Bar
+                data={[...topEmployees].reverse()}
+                xField="name"
+                yField="revenue"
+                color="#1677ff"
+                label={{
+                  text: (d: { revenue: number }) => d.revenue.toLocaleString('vi-VN') + ' ₫',
+                  position: 'outside',
+                  style: { fontSize: 11 },
+                }}
+                axis={{
+                  y: { labelFormatter: (v: number) => (v / 1000000).toFixed(0) + 'tr' },
+                }}
+                height={300}
+              />
+            </Card>
+          </Col>
+
+        </Row>
+
         {/* Customer Volume */}
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12}>
@@ -142,28 +188,7 @@ function DashboardPage() {
               />
             </Card>
           </Col>
-          <Col xs={24} sm={12}>
-            <Card title="Top 5 nhân viên doanh thu cao nhất tháng">
-              <Bar
-                data={[...topEmployees].reverse()}
-                xField="name"
-                yField="revenue"
-                color="#1677ff"
-                label={{
-                  text: (d: { revenue: number }) => d.revenue.toLocaleString('vi-VN') + ' ₫',
-                  position: 'outside',
-                  style: { fontSize: 11 },
-                }}
-                axis={{
-                  y: { labelFormatter: (v: number) => (v / 1000000).toFixed(0) + 'tr' },
-                }}
-                height={300}
-              />
-            </Card>
-          </Col>
         </Row>
-
-
 
         {/* Recent Orders */}
         <Card title="5 đơn hàng mới nhất">

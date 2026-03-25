@@ -62,6 +62,14 @@ export const topEmployees = [
   { name: 'Hoàng Văn E', revenue: 15000000 },
 ]
 
+export const topAccounts = [
+  { name: 'admin', revenue: 45000000 },
+  { name: 'sales01', revenue: 38000000 },
+  { name: 'sales02', revenue: 31000000 },
+  { name: 'manager01', revenue: 22000000 },
+  { name: 'sales03', revenue: 17500000 },
+]
+
 function randomRevenue(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
