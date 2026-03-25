@@ -1,34 +1,82 @@
 import { Button, Table, Tag, Space } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { mockClients } from '../data'
+import { useClients } from '../hooks/useClients'
+import type { Client } from '../data'
 
 const columns = [
+  { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
   { title: 'Tên khách hàng', dataIndex: 'name', key: 'name' },
-  { title: 'Người liên hệ', dataIndex: 'contact', key: 'contact' },
-  { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
+  { title: 'Địa điểm', dataIndex: 'location', key: 'location', render: (v: string | null) => v ?? '' },
+  {
+    title: 'Website',
+    dataIndex: 'website',
+    key: 'website',
+    render: (v: string | null) => v ? <a href={v} target="_blank" rel="noreferrer">{v}</a> : '',
+  },
+  { title: 'Email', dataIndex: 'email', key: 'email', render: (v: string | null) => v ?? '' },
+  {
+    title: 'Thanh toán',
+    dataIndex: 'paymentTerms',
+    key: 'paymentTerms',
+    render: (v: number | null) => v ? `${v} ngày` : '',
+  },
+  {
+    title: 'Bảng giá',
+    children: [
+      {
+        title: 'Translation',
+        key: 'rate_trans',
+        render: (_: unknown, record: Client) => {
+          const r = record.rates.find((r) => r.serviceType.code === 'TRANS')
+          return r ? `${parseFloat(r.amount)} ${r.currency.code}/${r.unit.name}` : ''
+        },
+      },
+      {
+        title: 'Editing/Proofreading',
+        key: 'rate_edit',
+        render: (_: unknown, record: Client) => {
+          const r = record.rates.find((r) => r.serviceType.code === 'EDIT')
+          return r ? `${parseFloat(r.amount)} ${r.currency.code}/${r.unit.name}` : ''
+        },
+      },
+      {
+        title: 'MTPE',
+        key: 'rate_mtpe',
+        render: (_: unknown, record: Client) => {
+          const r = record.rates.find((r) => r.serviceType.code === 'MTPE')
+          return r ? `${parseFloat(r.amount)} ${r.currency.code}/${r.unit.name}` : ''
+        },
+      },
+    ],
+  },
   {
     title: 'Trạng thái',
-    dataIndex: 'status',
-    key: 'status',
-    render: (status: string) => (
-      <Tag color={status === 'active' ? 'green' : 'red'}>
-        {status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
+    dataIndex: 'isActive',
+    key: 'isActive',
+    render: (isActive: boolean) => (
+      <Tag color={isActive ? 'green' : 'red'}>
+        {isActive ? 'Hoạt động' : 'Không hoạt động'}
       </Tag>
     ),
   },
+  { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt' },
   {
     title: 'Hành động',
     key: 'action',
-    render: () => (
+    width: 120,
+    fixed: 'right' as const,
+    render: (_: unknown, _record: Client) => (
       <Space>
-        <Button type="link" icon={<EditOutlined />} />
-        <Button type="link" danger icon={<DeleteOutlined />} />
+        <Button type="link" size="small" icon={<EditOutlined />} />
+        <Button type="link" size="small" danger icon={<DeleteOutlined />} />
       </Space>
     ),
   },
 ]
 
 function ClientPage() {
+  const { data = [], isLoading } = useClients()
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -37,7 +85,7 @@ function ClientPage() {
           Thêm khách hàng
         </Button>
       </div>
-      <Table columns={columns} dataSource={mockClients} bordered />
+      <Table columns={columns} dataSource={data} bordered loading={isLoading} scroll={{ x: 1800 }} />
     </div>
   )
 }

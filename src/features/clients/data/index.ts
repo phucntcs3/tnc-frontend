@@ -1,5 +1,27 @@
-export const mockClients = [
-  { key: '1', name: 'Công ty ABC', contact: 'Nguyễn Văn A', phone: '0901234567', status: 'active' },
-  { key: '2', name: 'Công ty XYZ', contact: 'Trần Thị B', phone: '0912345678', status: 'active' },
-  { key: '3', name: 'Cá nhân Lê C', contact: 'Lê Văn C', phone: '0923456789', status: 'inactive' },
-]
+export interface Rate {
+  id: number
+  amount: string
+  minAmount: string
+  note: string | null
+  sourceLang: string | null
+  targetLang: string | null
+  serviceType: { id: number; name: string; code: string }
+  unit: { id: number; name: string }
+  currency: { id: number; name: string; code: string }
+}
+
+export interface Client {
+  key: string
+  id: number
+  name: string
+  description: string | null
+  note: string | null
+  isActive: boolean
+  location: string | null
+  website: string | null
+  email: string | null
+  paymentTerms: number | null
+  establishedAt: string | null
+  createdAt: string
+  rates: Rate[]
+}
