@@ -11,8 +11,8 @@ export interface RateResponse {
   service_type: { id: number; name: string; code: string }
   unit: { id: number; name: string }
   currency: { id: number; name: string; code: string }
-  account: { id: number; name: string }
-  sale: { id: number; email: string }
+  account: { id: number; name: string } | null
+  sale: { id: number; email: string } | null
 }
 
 export interface ClientResponse {
@@ -30,16 +30,38 @@ export interface ClientResponse {
   rates: RateResponse[]
 }
 
+export interface ClientPayload {
+  name: string
+  description?: string
+  note?: string
+  location?: string
+  website?: string
+  email?: string
+  paymentTerms?: number
+  establishedAt?: string
+}
+
+const toSnakeCase = (data: Partial<ClientPayload>) => ({
+  name: data.name,
+  description: data.description,
+  note: data.note,
+  location: data.location,
+  website: data.website,
+  email: data.email,
+  payment_terms: data.paymentTerms,
+  established_at: data.establishedAt,
+})
+
 export const getClients = (params?: Record<string, unknown>) => {
   return axiosClient.get<{ success: boolean; data: ClientResponse[] }>(ENDPOINTS.CLIENTS, { params })
 }
 
-export const createClient = (data: Record<string, unknown>) => {
-  return axiosClient.post(ENDPOINTS.CLIENTS, data)
+export const createClient = (data: ClientPayload) => {
+  return axiosClient.post(ENDPOINTS.CLIENTS, toSnakeCase(data))
 }
 
-export const updateClient = (id: number, data: Record<string, unknown>) => {
-  return axiosClient.put(ENDPOINTS.CLIENT_BY_ID(id), data)
+export const updateClient = (id: number, data: Partial<ClientPayload>) => {
+  return axiosClient.put(ENDPOINTS.CLIENT_BY_ID(id), toSnakeCase(data))
 }
 
 export const deleteClient = (id: number) => {

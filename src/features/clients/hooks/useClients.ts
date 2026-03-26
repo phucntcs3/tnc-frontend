@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getClients, createClient, updateClient, deleteClient, type ClientResponse, type RateResponse } from '../api/clientApi'
+import { getClients, createClient, updateClient, deleteClient, type ClientResponse, type ClientPayload, type RateResponse } from '../api/clientApi'
 import type { Client, Rate } from '../data'
 
 const mapRate = (r: RateResponse): Rate => ({
@@ -50,7 +50,7 @@ export const useCreateClient = () => {
 export const useUpdateClient = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Record<string, unknown> }) =>
+    mutationFn: ({ id, data }: { id: number; data: Partial<ClientPayload> }) =>
       updateClient(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['clients'] }),
   })
