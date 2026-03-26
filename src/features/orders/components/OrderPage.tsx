@@ -181,13 +181,13 @@ function OrderPage() {
       title: 'Client',
       key: 'client',
       width: 140,
-      render: (_: unknown, record: Order) => record.client?.name ?? '—',
+      render: (_: unknown, record: Order) => record.client?.name ?? '',
     },
     {
       title: 'PM',
       key: 'pm',
       width: 80,
-      render: (_: unknown, record: Order) => record.pm?.name ?? '—',
+      render: (_: unknown, record: Order) => record.pm?.name ?? '',
     },
     {
       title: 'Web/PO',
@@ -201,7 +201,7 @@ function OrderPage() {
       width: 100,
       render: (_: unknown, record: Order) => {
         const name = record.invoiceStatus?.name
-        return name ? <Tag color={invoiceStatusColorMap[name]}>{name}</Tag> : '—'
+        return name ? <Tag color={invoiceStatusColorMap[name]}>{name}</Tag> : ''
       },
     },
     {
@@ -212,14 +212,14 @@ function OrderPage() {
         const name = record.service?.name
         return name ? (
           <Tag color={name === 'Job' ? 'blue' : 'purple'}>{name}</Tag>
-        ) : '—'
+        ) : ''
       },
     },
     {
       title: 'Field',
       key: 'field',
       width: 100,
-      render: (_: unknown, record: Order) => record.field?.name ?? '—',
+      render: (_: unknown, record: Order) => record.field?.name ?? '',
     },
     {
       title: 'Amount',
@@ -240,20 +240,27 @@ function OrderPage() {
       width: 110,
       render: (_: unknown, record: Order) => {
         const name = record.orderStatus?.name
-        return name ? <Tag color={statusColorMap[name]}>{name}</Tag> : '—'
+        return name ? <Tag color={statusColorMap[name]}>{name}</Tag> : ''
       },
     },
     {
       title: 'Assignee',
       key: 'assignee',
       width: 120,
-      render: (_: unknown, record: Order) => record.user?.email ?? '—',
+      render: (_: unknown, record: Order) => record.user?.email ?? '',
     },
     {
       title: 'Deadline',
       key: 'deadline',
       width: 110,
-      render: (_: unknown, record: Order) => record.deadlineAt ? record.deadlineAt.split('T')[0] : '—',
+      render: (_: unknown, record: Order) => record.deadlineAt ? record.deadlineAt.split('T')[0] : '',
+    },
+    {
+      title: 'Deadline Note',
+      dataIndex: 'deadlineNote',
+      key: 'deadlineNote',
+      width: 130,
+      render: (val: string) => val ?? '',
     },
     {
       title: 'Delivery',
@@ -261,7 +268,7 @@ function OrderPage() {
       width: 100,
       render: (_: unknown, record: Order) => {
         const name = record.deliveryStatus?.name
-        return name ? <Tag color={deliveryColorMap[name]}>{name}</Tag> : '—'
+        return name ? <Tag color={deliveryColorMap[name]}>{name}</Tag> : ''
       },
     },
     {
@@ -279,14 +286,14 @@ function OrderPage() {
         const name = record.paymentStatus?.name
         return name ? (
           <Tag color={paymentStatusColorMap[name]}>{name}</Tag>
-        ) : '—'
+        ) : ''
       },
     },
     {
       title: 'Account',
       key: 'account',
       width: 100,
-      render: (_: unknown, record: Order) => record.account?.name ?? '—',
+      render: (_: unknown, record: Order) => record.account?.name ?? '',
     },
     {
       title: 'Actions',
@@ -515,27 +522,27 @@ function OrderPage() {
             </div>
             <div>
               <span className="text-gray-500 text-sm">Client</span>
-              <div className="font-medium">{viewingOrder.client?.name ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.client?.name ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">PM</span>
-              <div className="font-medium">{viewingOrder.pm?.name ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.pm?.name ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Web/PO</span>
-              <div className="font-medium">{viewingOrder.webPo ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.webPo ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Invoice Status</span>
-              <div>{viewingOrder.invoiceStatus ? <Tag color={invoiceStatusColorMap[viewingOrder.invoiceStatus.name]}>{viewingOrder.invoiceStatus.name}</Tag> : '—'}</div>
+              <div>{viewingOrder.invoiceStatus ? <Tag color={invoiceStatusColorMap[viewingOrder.invoiceStatus.name]}>{viewingOrder.invoiceStatus.name}</Tag> : ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Service</span>
-              <div>{viewingOrder.service ? <Tag color={viewingOrder.service.name === 'Job' ? 'blue' : 'purple'}>{viewingOrder.service.name}</Tag> : '—'}</div>
+              <div>{viewingOrder.service ? <Tag color={viewingOrder.service.name === 'Job' ? 'blue' : 'purple'}>{viewingOrder.service.name}</Tag> : ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Field</span>
-              <div className="font-medium">{viewingOrder.field?.name ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.field?.name ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Amount</span>
@@ -543,27 +550,27 @@ function OrderPage() {
             </div>
             <div>
               <span className="text-gray-500 text-sm">Task No</span>
-              <div className="font-medium">{viewingOrder.taskNo ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.taskNo ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Status</span>
-              <div>{viewingOrder.orderStatus ? <Tag color={statusColorMap[viewingOrder.orderStatus.name]}>{viewingOrder.orderStatus.name}</Tag> : '—'}</div>
+              <div>{viewingOrder.orderStatus ? <Tag color={statusColorMap[viewingOrder.orderStatus.name]}>{viewingOrder.orderStatus.name}</Tag> : ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Assignee</span>
-              <div className="font-medium">{viewingOrder.user?.email ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.user?.email ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Deadline Date</span>
-              <div className="font-medium">{viewingOrder.deadlineAt ? viewingOrder.deadlineAt.split('T')[0] : '—'}</div>
+              <div className="font-medium">{viewingOrder.deadlineAt ? viewingOrder.deadlineAt.split('T')[0] : ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Deadline Note</span>
-              <div className="font-medium">{viewingOrder.deadlineNote ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.deadlineNote ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Delivery</span>
-              <div>{viewingOrder.deliveryStatus ? <Tag color={deliveryColorMap[viewingOrder.deliveryStatus.name]}>{viewingOrder.deliveryStatus.name}</Tag> : '—'}</div>
+              <div>{viewingOrder.deliveryStatus ? <Tag color={deliveryColorMap[viewingOrder.deliveryStatus.name]}>{viewingOrder.deliveryStatus.name}</Tag> : ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Cost</span>
@@ -571,11 +578,11 @@ function OrderPage() {
             </div>
             <div>
               <span className="text-gray-500 text-sm">Payment Status</span>
-              <div>{viewingOrder.paymentStatus ? <Tag color={paymentStatusColorMap[viewingOrder.paymentStatus.name]}>{viewingOrder.paymentStatus.name}</Tag> : '—'}</div>
+              <div>{viewingOrder.paymentStatus ? <Tag color={paymentStatusColorMap[viewingOrder.paymentStatus.name]}>{viewingOrder.paymentStatus.name}</Tag> : ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Account</span>
-              <div className="font-medium">{viewingOrder.account?.name ?? '—'}</div>
+              <div className="font-medium">{viewingOrder.account?.name ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Exchange Rate</span>
@@ -583,7 +590,7 @@ function OrderPage() {
             </div>
             <div className="col-span-3">
               <span className="text-gray-500 text-sm">Note</span>
-              <div className="font-medium">{viewingOrder.note || '—'}</div>
+              <div className="font-medium">{viewingOrder.note || ''}</div>
             </div>
           </div>
         )}
