@@ -12,6 +12,8 @@ const mapRate = (r: RateResponse): Rate => ({
   serviceType: r.service_type,
   unit: r.unit,
   currency: r.currency,
+  account: r.account,
+  sale: r.sale,
 })
 
 const mapClient = (c: ClientResponse): Client => ({

@@ -8,6 +8,8 @@ export interface Rate {
   serviceType: { id: number; name: string; code: string }
   unit: { id: number; name: string }
   currency: { id: number; name: string; code: string }
+  account: { id: number; name: string }
+  sale: { id: number; email: string }
 }
 
 export interface Client {
