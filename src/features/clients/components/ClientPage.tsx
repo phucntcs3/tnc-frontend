@@ -71,11 +71,11 @@ const columns: ColumnsType<ClientRow> = [
       ),
     ),
   },
-  {
-    title: 'Email',
-    key: 'email',
-    ...withRowSpan((row) => row.client.email ?? ''),
-  },
+  // {
+  //   title: 'Email',
+  //   key: 'email',
+  //   ...withRowSpan((row) => row.client.email ?? ''),
+  // },
   {
     title: 'Thanh toán',
     key: 'paymentTerms',
@@ -87,24 +87,35 @@ const columns: ColumnsType<ClientRow> = [
     render: (_: unknown, row: ClientRow) => row.rate?.account.name ?? '',
   },
   {
-    title: 'Translation',
-    key: 'rate_trans',
-    render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'TRANS'),
+    title: 'Sale',
+    key: 'sale',
+    width: 180,
+    render: (_: unknown, row: ClientRow) => row.rate?.sale.email ?? '',
   },
   {
-    title: 'Editing/Proofreading',
-    key: 'rate_edit',
-    render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'EDIT'),
-  },
-  {
-    title: 'MTPE',
-    key: 'rate_mtpe',
-    render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'MTPE'),
-  },
-  {
-    title: 'Hourly rate',
-    key: 'rate_hourly',
-    render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'HOURLY'),
+    title: 'Thanh toán',
+    children: [
+      {
+        title: 'Translation',
+        key: 'rate_trans',
+        render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'TRANS'),
+      },
+      {
+        title: 'Editing/Proofreading',
+        key: 'rate_edit',
+        render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'EDIT'),
+      },
+      {
+        title: 'MTPE',
+        key: 'rate_mtpe',
+        render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'MTPE'),
+      },
+      {
+        title: 'Hourly rate',
+        key: 'rate_hourly',
+        render: (_: unknown, row: ClientRow) => formatRateForCode(row.rate, 'HOURLY'),
+      },
+    ],
   },
   {
     title: 'Trạng thái',
