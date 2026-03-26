@@ -23,6 +23,10 @@ export const getUsers = (params?: Record<string, unknown>) => {
   return axiosClient.get<{ success: boolean; data: UserResponse[] }>(ENDPOINTS.USERS, { params })
 }
 
+export const getAssignees = () => {
+  return axiosClient.get<{ success: boolean; data: UserResponse[] }>(ENDPOINTS.ASSIGNEES)
+}
+
 export interface UserPayload {
   email: string
   roleId: number

@@ -5,6 +5,7 @@ export const ENDPOINTS = {
 
   USERS: '/users',
   USER_BY_ID: (id: number) => `/users/${id}`,
+  ASSIGNEES: '/users/assignees',
 
   ACCOUNTS: '/accounts',
   ACCOUNT_BY_ID: (id: number) => `/accounts/${id}`,

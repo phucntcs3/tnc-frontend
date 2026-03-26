@@ -38,7 +38,7 @@ import {
   useFields,
 } from '../hooks/useOrderMetadata'
 import { useClients } from '@/features/clients/hooks/useClients'
-import { useUsers } from '@/features/users/hooks/useUsers'
+import { useAssignees } from '@/features/users/hooks/useUsers'
 import { ITEM_PER_PAGE } from '@/constants'
 
 interface OrderFormValues {
@@ -64,7 +64,7 @@ interface OrderFormValues {
 function OrderPage() {
   const { data = [], isLoading } = useOrders()
   const { data: clients = [] } = useClients()
-  const { data: users = [] } = useUsers()
+  const { data: assignees = [] } = useAssignees()
   const { data: orderStatuses = [] } = useOrderStatuses()
   const { data: deliveryStatuses = [] } = useDeliveryStatuses()
   const { data: paymentStatuses = [] } = usePaymentStatuses()
@@ -470,7 +470,7 @@ function OrderPage() {
               <Select
                 showSearch
                 optionFilterProp="label"
-                options={users.map((u) => ({ value: u.id, label: u.email }))}
+                options={assignees.map((u) => ({ value: u.id, label: u.email }))}
               />
             </Form.Item>
 

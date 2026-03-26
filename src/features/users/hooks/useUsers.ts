@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getUsers, createUser, updateUser, deleteUser, type UserResponse, type UserPayload } from '../api/userApi'
+import { getUsers, getAssignees, createUser, updateUser, deleteUser, type UserResponse, type UserPayload } from '../api/userApi'
 import type { User } from '../data'
 
 const mapUser = (u: UserResponse): User => ({
@@ -23,6 +23,16 @@ export const useUsers = (params?: Record<string, unknown>) => {
   return useQuery({
     queryKey: ['users', params],
     queryFn: () => getUsers(params).then((res) => res.data.data.map(mapUser)),
+  })
+}
+
+export const useAssignees = () => {
+  return useQuery({
+    queryKey: ['assignees'],
+    queryFn: () =>
+      getAssignees().then((res) =>
+        res.data.data.map((u) => ({ id: u.id, email: u.email })),
+      ),
   })
 }
 
