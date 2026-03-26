@@ -104,12 +104,6 @@ function PMPage() {
 
   const columns: ColumnsType<PM> = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: 80,
-    },
-    {
       title: 'Tên',
       dataIndex: 'name',
       key: 'name',

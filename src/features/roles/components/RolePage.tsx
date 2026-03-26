@@ -101,7 +101,6 @@ function RolePage() {
   }
 
   const columns = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 60 },
     { title: 'Tên', dataIndex: 'name', key: 'name' },
     { title: 'Code', dataIndex: 'code', key: 'code' },
     { title: 'Mô tả', dataIndex: 'description', key: 'description', render: (v: string | null) => v ?? '' },
