@@ -47,6 +47,11 @@ const menuItems = [
     icon: <SafetyCertificateOutlined />,
     label: 'Roles',
   },
+  {
+    key: '/pms',
+    icon: <UserOutlined />,
+    label: 'PMs',
+  },
 ]
 
 function MainLayout() {

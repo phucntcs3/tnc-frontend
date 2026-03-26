@@ -10,6 +10,7 @@ import UserPage from './features/users/components/UserPage'
 import AccountPage from './features/accounts/components/AccountPage'
 import ClientPage from './features/clients/components/ClientPage'
 import RolePage from './features/roles/components/RolePage'
+import PMPage from './features/pms/components/PMPage'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/accounts" element={<AccountPage />} />
             <Route path="/clients" element={<ClientPage />} />
             <Route path="/roles" element={<RolePage />} />
+            <Route path="/pms" element={<PMPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

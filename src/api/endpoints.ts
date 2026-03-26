@@ -18,6 +18,9 @@ export const ENDPOINTS = {
   ORDERS: '/orders',
   ORDER_BY_ID: (id: number) => `/orders/${id}`,
 
+  PMS: '/pms',
+  PM_BY_ID: (id: number) => `/pms/${id}`,
+
   ORDER_METADATA_ORDER_STATUSES: '/order-metadata/order-statuses',
   ORDER_METADATA_DELIVERY_STATUSES: '/order-metadata/delivery-statuses',
   ORDER_METADATA_PAYMENT_STATUSES: '/order-metadata/payment-statuses',
