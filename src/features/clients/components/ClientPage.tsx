@@ -11,6 +11,8 @@ import {
   DatePicker,
   Popconfirm,
   message,
+  Row,
+  Col,
 } from 'antd'
 import {
   PlusOutlined,
@@ -299,43 +301,55 @@ function ClientPage() {
         cancelText="Huỷ"
         confirmLoading={createClientMutation.isPending || updateClientMutation.isPending}
         destroyOnHidden
+        width={800}
       >
         <Form form={form} layout="vertical" className="mt-4">
-          <Form.Item
-            name="name"
-            label="Tên khách hàng"
-            rules={[{ required: true, message: 'Nhập tên khách hàng' }]}
-          >
-            <Input placeholder="Tên khách hàng" />
-          </Form.Item>
-
-          <Form.Item name="location" label="Địa điểm">
-            <Input placeholder="Địa điểm" />
-          </Form.Item>
-
-          <Form.Item name="website" label="Website">
-            <Input placeholder="Website" />
-          </Form.Item>
-
-          <Form.Item name="email" label="Email">
-            <Input placeholder="Email" />
-          </Form.Item>
-
-          <Form.Item name="paymentTerms" label="Thanh toán (ngày)">
-            <InputNumber placeholder="Số ngày" min={0} className="w-full" />
-          </Form.Item>
-
-          <Form.Item name="establishedAt" label="Ngày thành lập">
-            <DatePicker placeholder="Chọn ngày" className="w-full" />
-          </Form.Item>
-
-          <Form.Item name="description" label="Mô tả">
-            <Input.TextArea placeholder="Mô tả" rows={3} />
-          </Form.Item>
-
-          <Form.Item name="note" label="Ghi chú">
-            <Input.TextArea placeholder="Ghi chú" rows={3} />
-          </Form.Item>
+          <Row gutter={16}>
+            <Col span={8}>
+              <Form.Item
+                name="name"
+                label="Tên khách hàng"
+                rules={[{ required: true, message: 'Nhập tên khách hàng' }]}
+              >
+                <Input placeholder="Tên khách hàng" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="location" label="Địa điểm">
+                <Input placeholder="Địa điểm" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="website" label="Website">
+                <Input placeholder="Website" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="email" label="Email">
+                <Input placeholder="Email" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="paymentTerms" label="Thanh toán (ngày)">
+                <InputNumber placeholder="Số ngày" min={0} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="establishedAt" label="Ngày thành lập">
+                <DatePicker placeholder="Chọn ngày" className="w-full" />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item name="description" label="Mô tả">
+                <Input.TextArea placeholder="Mô tả" rows={3} />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item name="note" label="Ghi chú">
+                <Input.TextArea placeholder="Ghi chú" rows={3} />
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Modal>
 
