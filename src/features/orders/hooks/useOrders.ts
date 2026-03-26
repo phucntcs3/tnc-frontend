@@ -24,6 +24,7 @@ const mapOrder = (o: OrderResponse): Order => ({
   paymentStatus: o.payment_status,
   account: o.account,
   user: o.user,
+  assignee: o.assignee,
 })
 
 export const useOrders = (params?: Record<string, unknown>) => {

@@ -32,6 +32,7 @@ export interface OrderResponse {
   payment_status: NamedEntityResponse | null
   account: NamedEntityResponse | null
   user: UserEntityResponse | null
+  assignee: UserEntityResponse | null
 }
 
 export const getOrders = (params?: Record<string, unknown>) => {

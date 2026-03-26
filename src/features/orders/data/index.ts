@@ -30,6 +30,7 @@ export interface Order {
   paymentStatus: NamedEntity | null
   account: NamedEntity | null
   user: OrderUser | null
+  assignee: OrderUser | null
 }
 
 export const invoiceStatusColorMap: Record<string, string> = {

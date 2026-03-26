@@ -100,7 +100,7 @@ function OrderPage() {
       amount: record.amount,
       taskNo: record.taskNo ?? undefined,
       status: record.orderStatus?.id,
-      assignee: record.user?.id,
+      assignee: record.assignee?.id,
       deadlineAt: record.deadlineAt ? dayjs(record.deadlineAt) : undefined,
       deadlineNote: record.deadlineNote ?? undefined,
       delivery: record.deliveryStatus?.id,
@@ -141,7 +141,7 @@ function OrderPage() {
         amount: values.amount,
         task_no: values.taskNo,
         order_status_id: values.status,
-        user_id: values.assignee,
+        assignee_id: values.assignee,
         deadline_at: values.deadlineAt ? values.deadlineAt.format('YYYY-MM-DD') : undefined,
         deadline_note: values.deadlineNote,
         delivery_status_id: values.delivery,
@@ -247,7 +247,7 @@ function OrderPage() {
       title: 'Assignee',
       key: 'assignee',
       width: 120,
-      render: (_: unknown, record: Order) => record.user?.email ?? '',
+      render: (_: unknown, record: Order) => record.assignee?.email ?? '',
     },
     {
       title: 'Deadline',
@@ -294,6 +294,12 @@ function OrderPage() {
       key: 'account',
       width: 100,
       render: (_: unknown, record: Order) => record.account?.name ?? '',
+    },
+    {
+      title: 'User',
+      key: 'user',
+      width: 120,
+      render: (_: unknown, record: Order) => record.user?.email ?? '',
     },
     {
       title: 'Actions',
@@ -558,7 +564,7 @@ function OrderPage() {
             </div>
             <div>
               <span className="text-gray-500 text-sm">Assignee</span>
-              <div className="font-medium">{viewingOrder.user?.email ?? ''}</div>
+              <div className="font-medium">{viewingOrder.assignee?.email ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Deadline Date</span>
@@ -583,6 +589,10 @@ function OrderPage() {
             <div>
               <span className="text-gray-500 text-sm">Account</span>
               <div className="font-medium">{viewingOrder.account?.name ?? ''}</div>
+            </div>
+            <div>
+              <span className="text-gray-500 text-sm">User</span>
+              <div className="font-medium">{viewingOrder.user?.email ?? ''}</div>
             </div>
             <div>
               <span className="text-gray-500 text-sm">Exchange Rate</span>
