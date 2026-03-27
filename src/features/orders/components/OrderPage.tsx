@@ -186,7 +186,7 @@ function OrderPage() {
     {
       title: 'PM',
       key: 'pm',
-      width: 80,
+      width: 120,
       render: (_: unknown, record: Order) => record.pm?.name ?? '',
     },
     {
@@ -246,7 +246,7 @@ function OrderPage() {
     {
       title: 'Assignee',
       key: 'assignee',
-      width: 120,
+      width: 180,
       render: (_: unknown, record: Order) => record.assignee?.email ?? '',
     },
     {
@@ -296,9 +296,9 @@ function OrderPage() {
       render: (_: unknown, record: Order) => record.account?.name ?? '',
     },
     {
-      title: 'User',
+      title: 'Sale',
       key: 'user',
-      width: 120,
+      width: 180,
       render: (_: unknown, record: Order) => record.user?.email ?? '',
     },
     {
