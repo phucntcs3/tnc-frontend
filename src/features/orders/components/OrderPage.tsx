@@ -609,4 +609,4 @@ function OrderPage() {
   )
 }
 
-export default OrderPage
+export default OrderPage;
